@@ -8,6 +8,4 @@ public @interface TableInfo {
 
 	String tableName();
 
-	String dateFormat();
-
 }

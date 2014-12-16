@@ -12,28 +12,28 @@ public class AccessTest {
 
 	@Test
 	public void insertTest() {
-		Content con = new Content(null, "dfdfdf", "zdf", "ss",
+		Content con = new Content(66, "dfdfdf", "zdf", "ss",
 				"sqltest", new Date());
 		assertTrue(Access.insert(con));
 	}
 	
 	@Test
 	public void updateTest() {
-		Content con = new Content(67, "asdx", "zdf", "ss",
+		Content con = new Content(66, "asdx", "zdf", "ss",
 				"sqltest", new Date());
 		Access.update(con, null);
 	}
 	
 	@Test
 	public void deleteTest() {
-		Content con = new Content(67, "asdx", "zdf", "ss",
+		Content con = new Content(66, "asdx", "zdf", "ss",
 				"sqltest", new Date());
 		Access.delete(con, null);
 	}
 	
 	@Test
 	public void getTest() {
-		System.out.println(Access.get(Content.class, 10));
+		System.out.println(Access.get(Content.class, 66));
 	}
 
 }

@@ -12,7 +12,7 @@ public class Access {
 	private Access() {
 	}
 
-	public static boolean insert(Record record) {
+	public static boolean insert(Object record) {
 		TableInfo anotation = record.getClass().getAnnotation(TableInfo.class);
 		String tableName = anotation.tableName();
 		Field[] fields = record.getClass().getDeclaredFields();
@@ -65,7 +65,7 @@ public class Access {
 		}
 	}
 
-	public static boolean update(Record record, String whereClause) {
+	public static boolean update(Object record, String whereClause) {
 		DAO dao = new DAO();
 		String tableName = record.getClass().getAnnotation(TableInfo.class)
 				.tableName();
@@ -85,7 +85,7 @@ public class Access {
 		return dao.doQuery();
 	}
 
-	public static boolean update(Record record) {
+	public static boolean update(Object record) {
 		DAO dao = new DAO();
 		String tableName = record.getClass().getAnnotation(TableInfo.class)
 				.tableName();
@@ -101,7 +101,7 @@ public class Access {
 		return dao.doQuery();
 	}
 
-	public static boolean delete(Record record, String whereClause) {
+	public static boolean delete(Object record, String whereClause) {
 		DAO dao = new DAO();
 		Class<?> cLass = record.getClass();
 		String tableName = cLass.getAnnotation(TableInfo.class).tableName();
@@ -120,7 +120,7 @@ public class Access {
 		return dao.doQuery();
 	}
 	
-	public static boolean delete(Record record) {
+	public static boolean delete(Object record) {
 		DAO dao = new DAO();
 		Class<?> cLass = record.getClass();
 		String tableName = cLass.getAnnotation(TableInfo.class).tableName();
@@ -138,7 +138,7 @@ public class Access {
 	
 
 	
-	private static String addParams(Record record, DAO dao) {
+	private static String addParams(Object record, DAO dao) {
 		String fieldsString = "";
 		Field fields[] = record.getClass().getDeclaredFields();
 		Object param;
@@ -166,7 +166,7 @@ public class Access {
 		return null;
 	}
 
-	private static Object getFieldObject(String fieldName, Record record) {
+	private static Object getFieldObject(String fieldName, Object record) {
 		try {
 			return record.getClass()
 					.getMethod(getterString(fieldName), (Class<?>[]) null)
