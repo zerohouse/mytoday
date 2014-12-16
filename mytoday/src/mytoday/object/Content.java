@@ -2,6 +2,7 @@ package mytoday.object;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import mytoday.annotation.Primarykey;
 import mytoday.annotation.TableInfo;
@@ -32,6 +33,15 @@ public class Content extends Record {
 		this.head = head;
 		this.content = content;
 		this.timestamp = timestamp;
+	}
+	
+	public Content(List<Object> initargs){
+		this.id = (Integer) initargs.get(0);
+		this.type = (String) initargs.get(1);
+		this.userid = (String) initargs.get(2);
+		this.head = (String) initargs.get(3);
+		this.content = (String) initargs.get(4);
+		this.timestamp = parseDate(initargs.get(5));
 	}
 
 	@Override

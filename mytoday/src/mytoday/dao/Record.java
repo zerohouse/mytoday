@@ -13,7 +13,7 @@ import mytoday.annotation.TableInfo;
 
 public abstract class Record {
 
-	protected abstract boolean setByList(ArrayList<Object> user);
+	protected abstract boolean setByList(ArrayList<Object> arrayList);
 
 	private Field primaryField;
 	private Field[] fields;
@@ -167,6 +167,7 @@ public abstract class Record {
 			return false;
 		return setByList(user);
 	}
+	
 
 	private Object getFieldObject(String fieldName) throws Exception {
 		return getClass().getMethod(getterString(fieldName), (Class<?>[]) null)
