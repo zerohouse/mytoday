@@ -7,6 +7,7 @@ import mytoday.Method;
 import mytoday.annotation.DefaultCondition;
 import mytoday.annotation.PrimaryKey;
 import mytoday.annotation.TableName;
+import mytoday.dao.Access;
 
 @TableName("contents")
 @DefaultCondition("order by id limit 0,10")
@@ -21,13 +22,11 @@ public class Content {
 	private Date timestamp;
 
 	public Content(Integer id) {
-		super();
 		this.id = id;
 	}
 
 	public Content(Integer id, String type, String userid, String head,
 			String content, Date timestamp) {
-		super();
 		this.id = id;
 		this.type = type;
 		this.userid = userid;
@@ -50,6 +49,10 @@ public class Content {
 		return "Content [id=" + id + ", type=" + type + ", userid=" + userid
 				+ ", head=" + head + ", content=" + content + ", timestamp="
 				+ timestamp + "]";
+	}
+	
+	public boolean insert(){
+		return Access.insert(this);
 	}
 
 	public Integer getId() {

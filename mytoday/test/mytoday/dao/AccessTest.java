@@ -13,9 +13,9 @@ public class AccessTest {
 
 	@Test
 	public void insertTest() {
-		Content con = new Content(66, "dfdfdf", "zdf", "ss",
+		Content con = new Content(null, "dfdfdf", "zdf", "ss",
 				"sqltest", new Date());
-		assertTrue(Access.insert(con));
+		assertTrue(con.insert());
 	}
 	
 	@Test
