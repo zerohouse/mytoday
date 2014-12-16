@@ -13,7 +13,7 @@ public class Setting {
 	private static Setting setting = new Setting();
 
 	private Map<String, String> db = new HashMap<String, String>();
-	private Map<String, String> url = new HashMap<String, String>();
+	private Map<String, String> general = new HashMap<String, String>();
 
 	private Setting() {
 		String path = Setting.class.getResource("/").getPath();
@@ -28,8 +28,8 @@ public class Setting {
 					readDBSettings(reader);
 					continue;
 				}
-				if (name.equals("url")) {
-					readUrlSettings(reader);
+				if (name.equals("general")) {
+					readGeneralSettings(reader);
 					continue;
 				}
 				reader.skipValue();
@@ -50,8 +50,8 @@ public class Setting {
 		switch (type) {
 		case "db":
 			return setting.db;
-		case "url":
-			return setting.url;
+		case "general":
+			return setting.general;
 		default:
 			return null;
 		}
@@ -73,12 +73,16 @@ public class Setting {
 		reader.endObject();
 	}
 
-	private void readUrlSettings(JsonReader reader) throws IOException {
+	private void readGeneralSettings(JsonReader reader) throws IOException {
 		reader.beginObject();
 		while (reader.hasNext()) {
 			String dbn = reader.nextName();
-			if (dbn.equals("default")) {
-				url.put("default", reader.nextString());
+			if (dbn.equals("url")) {
+				general.put("url", reader.nextString());
+			} else if (dbn.equals("controllerPath")) {
+				general.put("controllerPath", reader.nextString());
+			} else if (dbn.equals("jspPath")) {
+				general.put("jspPath", reader.nextString());
 			}
 		}
 		reader.endObject();

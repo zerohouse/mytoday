@@ -3,7 +3,7 @@ package mytoday.object;
 import java.util.Date;
 import java.util.List;
 
-import mytoday.Method;
+import mytoday.Util;
 import mytoday.annotation.DefaultCondition;
 import mytoday.annotation.PrimaryKey;
 import mytoday.annotation.TableName;
@@ -41,7 +41,7 @@ public class Content {
 		this.userid = (String) initargs.get(2);
 		this.head = (String) initargs.get(3);
 		this.content = (String) initargs.get(4);
-		this.timestamp = Method.parseDate(initargs.get(5), "yyyy-MM-dd HH:mm:ss");
+		this.timestamp = Util.parseDate(initargs.get(5), "yyyy-MM-dd HH:mm:ss");
 	}
 
 	@Override

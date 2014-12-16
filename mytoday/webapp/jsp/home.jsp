@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-get start
+get start홈
 </body>
 </html>

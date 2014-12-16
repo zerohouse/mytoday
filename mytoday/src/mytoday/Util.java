@@ -4,9 +4,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Method {
+public class Util {
 
-	private Method(){}
+	private Util(){
+		
+	}
 	
 	public static Date parseDate(Object object, String dateformat){
 		SimpleDateFormat datetime = new SimpleDateFormat(dateformat);

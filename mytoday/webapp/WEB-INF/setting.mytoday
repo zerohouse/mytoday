@@ -4,7 +4,9 @@
 		"id" : "zerohouse",
 		"password" : "qkrtjdgh1"
 	},
-	"url" : {
-		"default" : "http://localhost:8080"
+	"general" : {
+		"url" : "http://localhost:8080",
+		"controllerPath" : "mytoday.controller",
+		"jspPath" : "jsp/"
 	}
 }
