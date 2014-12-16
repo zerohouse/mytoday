@@ -4,13 +4,15 @@ import java.util.Date;
 import java.util.List;
 
 import mytoday.Method;
-import mytoday.annotation.Primarykey;
-import mytoday.annotation.TableInfo;
+import mytoday.annotation.DefaultCondition;
+import mytoday.annotation.PrimaryKey;
+import mytoday.annotation.TableName;
 
-@TableInfo(tableName = "contents")
+@TableName("contents")
+@DefaultCondition("order by id limit 0,10")
 public class Content {
 
-	@Primarykey
+	@PrimaryKey
 	private Integer id;
 	private String type;
 	private String userid;

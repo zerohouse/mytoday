@@ -1,8 +1,9 @@
 package mytoday.dao;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
+import java.util.List;
 
 import mytoday.object.Content;
 
@@ -33,7 +34,14 @@ public class AccessTest {
 	
 	@Test
 	public void getTest() {
-		System.out.println(Access.get(Content.class, 66));
+		System.out.println((Content) Access.get(Content.class, 66));
 	}
+	
+	@Test
+	public void getListTest() {
+		List<? extends Object> list = Access.getList(Content.class);
+		System.out.println(list);
+	}
+
 
 }

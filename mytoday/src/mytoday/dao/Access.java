@@ -2,10 +2,12 @@ package mytoday.dao;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-import mytoday.annotation.Primarykey;
-import mytoday.annotation.TableInfo;
+import mytoday.annotation.DefaultCondition;
+import mytoday.annotation.PrimaryKey;
+import mytoday.annotation.TableName;
 
 public class Access {
 
@@ -13,8 +15,8 @@ public class Access {
 	}
 
 	public static boolean insert(Object record) {
-		TableInfo anotation = record.getClass().getAnnotation(TableInfo.class);
-		String tableName = anotation.tableName();
+		TableName anotation = record.getClass().getAnnotation(TableName.class);
+		String tableName = anotation.value();
 		Field[] fields = record.getClass().getDeclaredFields();
 
 		DAO dao = new DAO();
@@ -42,23 +44,66 @@ public class Access {
 
 		return dao.doQuery();
 	}
+	
+	public static List<? extends Object> getList(Class<?> cLass) {
+		List<Object> result = new ArrayList<Object>();
+		TableName tableName = cLass.getAnnotation(TableName.class);
+		DefaultCondition condition = cLass.getAnnotation(DefaultCondition.class);
+		DAO dao = new DAO();
+		String sql = "select * from " + tableName.value();
+		if (condition != null)
+			sql += " " + condition.value();
+		dao.setSql(sql);
+		dao.setResultSize(cLass.getDeclaredFields().length);
+		ArrayList<ArrayList<Object>> sqlArray = dao.getRecords();
+		Iterator<ArrayList<Object>> iterator = sqlArray.iterator();
+		Object eachInstance;
+		while(iterator.hasNext()){
+			try {
+				eachInstance = cLass.getConstructor(List.class).newInstance(iterator.next());
+				result.add(eachInstance);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+
+	public static List<? extends Object> getList(Class<?> cLass, String condition) {
+		List<Object> result = new ArrayList<Object>();
+		TableName tableName = cLass.getAnnotation(TableName.class);
+		DAO dao = new DAO();
+		String sql = "select * from " + tableName.value();
+		if (condition != null)
+			sql += " " + condition;
+		dao.setSql(sql);
+		dao.setResultSize(cLass.getDeclaredFields().length);
+		ArrayList<ArrayList<Object>> sqlArray = dao.getRecords();
+		Iterator<ArrayList<Object>> iterator = sqlArray.iterator();
+		Object eachInstance;
+		while(iterator.hasNext()){
+			try {
+				eachInstance = cLass.getConstructor(List.class).newInstance(iterator.next());
+				result.add(eachInstance);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+
 
 	public static Object get(Class<?> cLass, Object primaryKey) {
-		TableInfo anotation = cLass.getAnnotation(TableInfo.class);
+		TableName anotation = cLass.getAnnotation(TableName.class);
 		Field primaryField = getPrimaryField(cLass);
 		DAO dao = new DAO();
-		dao.setSql("select * from " + anotation.tableName() + " where "
-				+ primaryField.getName() + "=?");
-		System.out.println("select * from " + anotation.tableName() + " where "
+		dao.setSql("select * from " + anotation.value() + " where "
 				+ primaryField.getName() + "=?");
 		dao.addParameter(primaryKey);
-
 		dao.setResultSize(cLass.getDeclaredFields().length);
-		System.out.println(cLass.getDeclaredFields().length);
-		ArrayList<Object> user = dao.getRecord();
-		System.out.println(user);
+		ArrayList<Object> record = dao.getRecord();
 		try {
-			return cLass.getConstructor(List.class).newInstance(user);
+			return cLass.getConstructor(List.class).newInstance(record);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -67,8 +112,8 @@ public class Access {
 
 	public static boolean update(Object record, String whereClause) {
 		DAO dao = new DAO();
-		String tableName = record.getClass().getAnnotation(TableInfo.class)
-				.tableName();
+		String tableName = record.getClass().getAnnotation(TableName.class)
+				.value();
 		Field primaryField = getPrimaryField(record.getClass());
 		Object primaryKey = getFieldObject(primaryField.getName(), record);
 		String fieldsString = addParams(record, dao);
@@ -87,14 +132,14 @@ public class Access {
 
 	public static boolean update(Object record) {
 		DAO dao = new DAO();
-		String tableName = record.getClass().getAnnotation(TableInfo.class)
-				.tableName();
+		String tableName = record.getClass().getAnnotation(TableName.class)
+				.value();
 		Field primaryField = getPrimaryField(record.getClass());
 		Object primaryKey = getFieldObject(primaryField.getName(), record);
 		String fieldsString = addParams(record, dao);
 
-		String sql = "update " + tableName + " set " + fieldsString
-				+ " where " + primaryField.getName() + "=?";
+		String sql = "update " + tableName + " set " + fieldsString + " where "
+				+ primaryField.getName() + "=?";
 		dao.addParameter(primaryKey);
 
 		dao.setSql(sql);
@@ -104,40 +149,37 @@ public class Access {
 	public static boolean delete(Object record, String whereClause) {
 		DAO dao = new DAO();
 		Class<?> cLass = record.getClass();
-		String tableName = cLass.getAnnotation(TableInfo.class).tableName();
+		String tableName = cLass.getAnnotation(TableName.class).value();
 		Field primaryField = getPrimaryField(cLass);
 		Object primaryKey = getFieldObject(primaryField.getName(), record);
 
 		String sql = "delete from " + tableName + " where "
 				+ primaryField.getName() + "=?";
-		
+
 		if (whereClause != null) {
 			sql += " and " + whereClause;
 		}
-		
+
 		dao.setSql(sql);
 		dao.addParameter(primaryKey);
 		return dao.doQuery();
 	}
-	
+
 	public static boolean delete(Object record) {
 		DAO dao = new DAO();
 		Class<?> cLass = record.getClass();
-		String tableName = cLass.getAnnotation(TableInfo.class).tableName();
+		String tableName = cLass.getAnnotation(TableName.class).value();
 		Field primaryField = getPrimaryField(cLass);
 		Object primaryKey = getFieldObject(primaryField.getName(), record);
 
 		String sql = "delete from " + tableName + " where "
 				+ primaryField.getName() + "=?";
-		
+
 		dao.setSql(sql);
 		dao.addParameter(primaryKey);
 		return dao.doQuery();
 	}
 
-	
-
-	
 	private static String addParams(Object record, DAO dao) {
 		String fieldsString = "";
 		Field fields[] = record.getClass().getDeclaredFields();
@@ -161,7 +203,7 @@ public class Access {
 		Field[] fields = cLass.getDeclaredFields();
 		int columnSize = fields.length;
 		for (int i = 0; i < columnSize; i++)
-			if (fields[i].isAnnotationPresent(Primarykey.class))
+			if (fields[i].isAnnotationPresent(PrimaryKey.class))
 				return fields[i];
 		return null;
 	}
