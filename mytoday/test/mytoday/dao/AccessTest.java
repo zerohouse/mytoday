@@ -22,14 +22,14 @@ public class AccessTest {
 	public void updateTest() {
 		Content con = new Content(66, "asdx", "zdf", "ss",
 				"sqltest", new Date());
-		Access.update(con, null);
+		Access.update(con);
 	}
 	
 	@Test
 	public void deleteTest() {
 		Content con = new Content(66, "asdx", "zdf", "ss",
 				"sqltest", new Date());
-		Access.delete(con, null);
+		Access.delete(con);
 	}
 	
 	@Test
