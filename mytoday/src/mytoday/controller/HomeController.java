@@ -1,5 +1,7 @@
 package mytoday.controller;
 
+import java.io.IOException;
+
 import mytoday.Http;
 import mytoday.annotation.Controller;
 import mytoday.annotation.Get;
@@ -18,9 +20,12 @@ public class HomeController {
 		return "index.jsp";
 	}
 	
-
-	
-	
+	@Get("/test.my")
+	public String sss(Http http) throws IOException{
+		http.getResp().getWriter().write("ssssss");
+		return null;
+	}
+		
 	@Post("/home")
 	public String homes(Http http){
 		return null;
