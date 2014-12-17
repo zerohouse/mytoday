@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import mytoday.annotation.DefaultCondition;
+import mytoday.annotation.NotThisDB;
 import mytoday.annotation.PrimaryKey;
 import mytoday.annotation.TableName;
 
@@ -17,18 +18,18 @@ public class Access {
 	public static boolean insert(Object record) {
 		TableName anotation = record.getClass().getAnnotation(TableName.class);
 		String tableName = anotation.value();
-		Field[] fields = record.getClass().getDeclaredFields();
+		List<Field> fields = excludeNotThisDB(record.getClass().getDeclaredFields());
 
 		DAO dao = new DAO();
 		String fieldsString = "";
 		String valueString = "";
 		Object param;
 
-		for (int i = 0; i < fields.length; i++) {
+		for (int i = 0; i < fields.size(); i++) {
 			try {
-				param = getFieldObject(fields[i].getName(), record);
+				param = getFieldObject(fields.get(i).getName(), record);
 				if (param != null) {
-					fieldsString += fields[i].getName() + ",";
+					fieldsString += fields.get(i).getName() + ",";
 					valueString += "?,";
 					dao.addParameter(param);
 				}
@@ -44,23 +45,27 @@ public class Access {
 
 		return dao.doQuery();
 	}
-	
+
+
+
 	public static List<? extends Object> getList(Class<?> cLass) {
 		List<Object> result = new ArrayList<Object>();
 		TableName tableName = cLass.getAnnotation(TableName.class);
-		DefaultCondition condition = cLass.getAnnotation(DefaultCondition.class);
+		DefaultCondition condition = cLass
+				.getAnnotation(DefaultCondition.class);
 		DAO dao = new DAO();
 		String sql = "select * from " + tableName.value();
 		if (condition != null)
 			sql += " " + condition.value();
 		dao.setSql(sql);
-		dao.setResultSize(cLass.getDeclaredFields().length);
+		dao.setResultSize(excludeNotThisDB(cLass.getDeclaredFields()).size());
 		ArrayList<ArrayList<Object>> sqlArray = dao.getRecords();
 		Iterator<ArrayList<Object>> iterator = sqlArray.iterator();
 		Object eachInstance;
-		while(iterator.hasNext()){
+		while (iterator.hasNext()) {
 			try {
-				eachInstance = cLass.getConstructor(List.class).newInstance(iterator.next());
+				eachInstance = cLass.getConstructor(List.class).newInstance(
+						iterator.next());
 				result.add(eachInstance);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -69,7 +74,8 @@ public class Access {
 		return result;
 	}
 
-	public static List<? extends Object> getList(Class<?> cLass, String condition) {
+	public static List<? extends Object> getList(Class<?> cLass,
+			String condition) {
 		List<Object> result = new ArrayList<Object>();
 		TableName tableName = cLass.getAnnotation(TableName.class);
 		DAO dao = new DAO();
@@ -77,13 +83,14 @@ public class Access {
 		if (condition != null)
 			sql += " " + condition;
 		dao.setSql(sql);
-		dao.setResultSize(cLass.getDeclaredFields().length);
+		dao.setResultSize(excludeNotThisDB(cLass.getDeclaredFields()).size());
 		ArrayList<ArrayList<Object>> sqlArray = dao.getRecords();
 		Iterator<ArrayList<Object>> iterator = sqlArray.iterator();
 		Object eachInstance;
-		while(iterator.hasNext()){
+		while (iterator.hasNext()) {
 			try {
-				eachInstance = cLass.getConstructor(List.class).newInstance(iterator.next());
+				eachInstance = cLass.getConstructor(List.class).newInstance(
+						iterator.next());
 				result.add(eachInstance);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -91,7 +98,6 @@ public class Access {
 		}
 		return result;
 	}
-
 
 	public static Object get(Class<?> cLass, Object primaryKey) {
 		TableName anotation = cLass.getAnnotation(TableName.class);
@@ -100,7 +106,7 @@ public class Access {
 		dao.setSql("select * from " + anotation.value() + " where "
 				+ primaryField.getName() + "=?");
 		dao.addParameter(primaryKey);
-		dao.setResultSize(cLass.getDeclaredFields().length);
+		dao.setResultSize(excludeNotThisDB(cLass.getDeclaredFields()).size());
 		ArrayList<Object> record = dao.getRecord();
 		try {
 			return cLass.getConstructor(List.class).newInstance(record);
@@ -182,13 +188,13 @@ public class Access {
 
 	private static String addParams(Object record, DAO dao) {
 		String fieldsString = "";
-		Field fields[] = record.getClass().getDeclaredFields();
+		List<Field> fields = excludeNotThisDB(record.getClass().getDeclaredFields());
 		Object param;
-		for (int i = 0; i < fields.length; i++) {
+		for (int i = 0; i < fields.size(); i++) {
 			try {
-				param = getFieldObject(fields[i].getName(), record);
+				param = getFieldObject(fields.get(i).getName(), record);
 				if (param != null) {
-					fieldsString += fields[i].getName() + "=?, ";
+					fieldsString += fields.get(i).getName() + "=?, ";
 					dao.addParameter(param);
 				}
 			} catch (Exception e) {
@@ -200,11 +206,11 @@ public class Access {
 	}
 
 	private static Field getPrimaryField(Class<?> cLass) {
-		Field[] fields = cLass.getDeclaredFields();
-		int columnSize = fields.length;
+		List<Field> fields = excludeNotThisDB(cLass.getDeclaredFields());
+		int columnSize = fields.size();
 		for (int i = 0; i < columnSize; i++)
-			if (fields[i].isAnnotationPresent(PrimaryKey.class))
-				return fields[i];
+			if (fields.get(i).isAnnotationPresent(PrimaryKey.class))
+				return fields.get(i);
 		return null;
 	}
 
@@ -221,6 +227,15 @@ public class Access {
 	private static String getterString(String fieldName) {
 		return "get" + fieldName.substring(0, 1).toUpperCase()
 				+ fieldName.substring(1);
+	}
+	
+	private static List<Field> excludeNotThisDB(Field[] fields) {
+		List<Field> result = new ArrayList<Field>();
+		for (int i = 0; i < fields.length; i++) {
+			if(!fields[i].isAnnotationPresent(NotThisDB.class))
+				result.add(fields[i]);
+		}
+		return result;
 	}
 
 }
