@@ -2,10 +2,10 @@ package mytoday.controller;
 
 import java.io.IOException;
 
-import mytoday.Http;
 import mytoday.annotation.Controller;
 import mytoday.annotation.Get;
 import mytoday.annotation.Post;
+import mytoday.url.Http;
 
 @Controller
 public class HomeController {

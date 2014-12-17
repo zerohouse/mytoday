@@ -1,4 +1,4 @@
-package mytoday;
+package mytoday.url;
 
 import java.io.IOException;
 
@@ -9,8 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import mytoday.url.MethodHolder;
-import mytoday.url.Url;
+import mytoday.Setting;
 
 @WebServlet("*.my")
 public class DispatcherServlet extends HttpServlet {
