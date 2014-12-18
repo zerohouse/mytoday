@@ -7,7 +7,7 @@ import mytoday.Util;
 import mytoday.annotation.DefaultCondition;
 import mytoday.annotation.PrimaryKey;
 import mytoday.annotation.TableName;
-import mytoday.dao.Access;
+import mytoday.dao.DBMethods;
 
 @TableName("contents")
 @DefaultCondition("order by id limit 0,10")
@@ -52,7 +52,7 @@ public class Content {
 	}
 	
 	public boolean insert(){
-		return Access.insert(this);
+		return DBMethods.insert(this);
 	}
 
 	public Integer getId() {

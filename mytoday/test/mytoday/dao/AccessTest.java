@@ -22,24 +22,24 @@ public class AccessTest {
 	public void updateTest() {
 		Content con = new Content(66, "asdx", "zdf", "ss",
 				"sqltest", new Date());
-		Access.update(con);
+		DBMethods.update(con);
 	}
 	
 	@Test
 	public void deleteTest() {
 		Content con = new Content(66, "asdx", "zdf", "ss",
 				"sqltest", new Date());
-		Access.delete(con);
+		DBMethods.delete(con);
 	}
 	
 	@Test
 	public void getTest() {
-		System.out.println((Content) Access.get(Content.class, 66));
+		System.out.println((Content) DBMethods.get(Content.class, 66));
 	}
 	
 	@Test
 	public void getListTest() {
-		List<? extends Object> list = Access.getList(Content.class);
+		List<? extends Object> list = DBMethods.getList(Content.class);
 		System.out.println(list);
 	}
 

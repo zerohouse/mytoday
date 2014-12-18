@@ -6,13 +6,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import mytoday.annotation.DefaultCondition;
-import mytoday.annotation.NotThisDB;
+import mytoday.annotation.DBExclude;
 import mytoday.annotation.PrimaryKey;
 import mytoday.annotation.TableName;
 
-public class Access {
+public class DBMethods {
 
-	private Access() {
+	private DBMethods() {
 	}
 
 	public static boolean insert(Object record) {
@@ -232,7 +232,7 @@ public class Access {
 	private static List<Field> excludeNotThisDB(Field[] fields) {
 		List<Field> result = new ArrayList<Field>();
 		for (int i = 0; i < fields.length; i++) {
-			if(!fields[i].isAnnotationPresent(NotThisDB.class))
+			if(!fields[i].isAnnotationPresent(DBExclude.class))
 				result.add(fields[i]);
 		}
 		return result;

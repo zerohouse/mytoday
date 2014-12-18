@@ -1,5 +1,5 @@
 package mytoday.annotation;
 
-public @interface NotThisDB {
+public @interface DBExclude {
 
 }
