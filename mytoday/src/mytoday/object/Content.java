@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import mytoday.Util;
+import mytoday.annotation.DBExclude;
 import mytoday.annotation.DefaultCondition;
 import mytoday.annotation.PrimaryKey;
 import mytoday.annotation.TableName;
@@ -20,6 +21,10 @@ public class Content {
 	private String head;
 	private String content;
 	private Date timestamp;
+	
+	
+	@DBExclude
+	private Integer exid;
 
 	public Content(Integer id) {
 		this.id = id;

@@ -8,9 +8,8 @@ public class SettingTest {
 
 	@Test
 	public void test() {
-		System.out.println(Setting.get("db"));
-		System.out.println(Setting.get("general").get("controllerPath"));
-		assertTrue(true);
+		assertEquals(Setting.get("db").size(), 3);
+		assertEquals(Setting.get("general").get("controllerPath"),"mytoday.controller");
 	}
 
 }

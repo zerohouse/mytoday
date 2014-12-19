@@ -18,7 +18,7 @@ public class DBMethods {
 	public static boolean insert(Object record) {
 		TableName anotation = record.getClass().getAnnotation(TableName.class);
 		String tableName = anotation.value();
-		List<Field> fields = excludeNotThisDB(record.getClass().getDeclaredFields());
+		List<Field> fields = excludeNotThisDB(record.getClass());
 
 		DAO dao = new DAO();
 		String fieldsString = "";
@@ -46,8 +46,6 @@ public class DBMethods {
 		return dao.doQuery();
 	}
 
-
-
 	public static List<? extends Object> getList(Class<?> cLass) {
 		List<Object> result = new ArrayList<Object>();
 		TableName tableName = cLass.getAnnotation(TableName.class);
@@ -58,19 +56,24 @@ public class DBMethods {
 		if (condition != null)
 			sql += " " + condition.value();
 		dao.setSql(sql);
-		dao.setResultSize(excludeNotThisDB(cLass.getDeclaredFields()).size());
+		dao.setResultSize(excludeNotThisDB(cLass).size());
 		ArrayList<ArrayList<Object>> sqlArray = dao.getRecords();
 		Iterator<ArrayList<Object>> iterator = sqlArray.iterator();
 		Object eachInstance;
+		ArrayList<Object> next;
 		while (iterator.hasNext()) {
 			try {
-				eachInstance = cLass.getConstructor(List.class).newInstance(
-						iterator.next());
+				next = iterator.next();
+				if (next.size() == 0)
+					continue;
+				eachInstance = cLass.getConstructor(List.class).newInstance(next);
 				result.add(eachInstance);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
+		if(result.size()==0)
+			return null;
 		return result;
 	}
 
@@ -83,7 +86,7 @@ public class DBMethods {
 		if (condition != null)
 			sql += " " + condition;
 		dao.setSql(sql);
-		dao.setResultSize(excludeNotThisDB(cLass.getDeclaredFields()).size());
+		dao.setResultSize(excludeNotThisDB(cLass).size());
 		ArrayList<ArrayList<Object>> sqlArray = dao.getRecords();
 		Iterator<ArrayList<Object>> iterator = sqlArray.iterator();
 		Object eachInstance;
@@ -106,8 +109,10 @@ public class DBMethods {
 		dao.setSql("select * from " + anotation.value() + " where "
 				+ primaryField.getName() + "=?");
 		dao.addParameter(primaryKey);
-		dao.setResultSize(excludeNotThisDB(cLass.getDeclaredFields()).size());
+		dao.setResultSize(excludeNotThisDB(cLass).size());
 		ArrayList<Object> record = dao.getRecord();
+		if (record.size() == 0)
+			return null;
 		try {
 			return cLass.getConstructor(List.class).newInstance(record);
 		} catch (Exception e) {
@@ -188,7 +193,7 @@ public class DBMethods {
 
 	private static String addParams(Object record, DAO dao) {
 		String fieldsString = "";
-		List<Field> fields = excludeNotThisDB(record.getClass().getDeclaredFields());
+		List<Field> fields = excludeNotThisDB(record.getClass());
 		Object param;
 		for (int i = 0; i < fields.size(); i++) {
 			try {
@@ -206,7 +211,7 @@ public class DBMethods {
 	}
 
 	private static Field getPrimaryField(Class<?> cLass) {
-		List<Field> fields = excludeNotThisDB(cLass.getDeclaredFields());
+		List<Field> fields = excludeNotThisDB(cLass);
 		int columnSize = fields.size();
 		for (int i = 0; i < columnSize; i++)
 			if (fields.get(i).isAnnotationPresent(PrimaryKey.class))
@@ -228,12 +233,14 @@ public class DBMethods {
 		return "get" + fieldName.substring(0, 1).toUpperCase()
 				+ fieldName.substring(1);
 	}
-	
-	private static List<Field> excludeNotThisDB(Field[] fields) {
+
+	private static List<Field> excludeNotThisDB(Class<?> cLass) {
 		List<Field> result = new ArrayList<Field>();
+		Field[] fields = cLass.getDeclaredFields();
 		for (int i = 0; i < fields.length; i++) {
-			if(!fields[i].isAnnotationPresent(DBExclude.class))
+			if (!fields[i].isAnnotationPresent(DBExclude.class)) {
 				result.add(fields[i]);
+			}
 		}
 		return result;
 	}

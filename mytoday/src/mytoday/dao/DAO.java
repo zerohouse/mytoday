@@ -53,8 +53,7 @@ public class DAO {
 			conn = getConnection();
 			pstmt = conn.prepareStatement(sql);
 			setParameters(pstmt);
-			pstmt.execute();
-			return true;
+			return pstmt.execute();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
