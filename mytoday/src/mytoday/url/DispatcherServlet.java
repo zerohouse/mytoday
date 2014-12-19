@@ -40,7 +40,7 @@ public class DispatcherServlet extends HttpServlet {
 			return;
 		}
 		Http http = new Http(req, resp);
-		String url = executeMethod(methodHolder, http);
+		Object url = executeMethod(methodHolder, http);
 		if (url == null)
 			return;
 		String jspPath = Setting.get("general").get("jspPath");
@@ -48,12 +48,12 @@ public class DispatcherServlet extends HttpServlet {
 		dispatcher.forward(req, resp);
 	}
 
-	private String executeMethod(MethodHolder methodHolder, Http http) {
+	private Object executeMethod(MethodHolder methodHolder, Http http) {
 		Object instance;
 		try {
 			instance = methodHolder.getClasstype().getConstructor()
 					.newInstance();
-			String url = (String) methodHolder.getMethod().invoke(instance,
+			Object url = (String) methodHolder.getMethod().invoke(instance,
 					http);
 			return url;
 		} catch (Exception e) {
