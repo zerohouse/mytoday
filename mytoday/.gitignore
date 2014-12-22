@@ -4,6 +4,8 @@
 .classpath
 .project
 .settings
+/tomcat.8080/
+/bin/
 
 
 # Created by https://www.gitignore.io
