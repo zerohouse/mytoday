@@ -2,10 +2,9 @@ package mytoday.object;
 
 import java.util.Date;
 
-import annotation.Key;
-import annotation.Table;
-import dao.Record;
-
+import easyjdbc.annotation.Key;
+import easyjdbc.annotation.Table;
+import easyjdbc.dao.Record;
 
 @Table("user")
 public class User implements Record {

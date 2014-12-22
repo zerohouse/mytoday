@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.junit.Test;
 
-import dao.DBMethods;
-import dao.Record;
+import easyjdbc.dao.DBMethods;
+import easyjdbc.dao.Record;
 
 public class UserTest {
 
