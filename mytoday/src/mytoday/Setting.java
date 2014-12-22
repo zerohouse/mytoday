@@ -12,7 +12,6 @@ public class Setting {
 
 	private static Setting setting = new Setting();
 
-	private Map<String, String> db = new HashMap<String, String>();
 	private Map<String, String> general = new HashMap<String, String>();
 
 	private Setting() {
@@ -24,10 +23,6 @@ public class Setting {
 			reader.beginObject();
 			while (reader.hasNext()) {
 				String name = reader.nextName();
-				if (name.equals("database")) {
-					readDBSettings(reader);
-					continue;
-				}
 				if (name.equals("general")) {
 					readGeneralSettings(reader);
 					continue;
@@ -48,8 +43,6 @@ public class Setting {
 
 	public static Map<String, String> get(String type) {
 		switch (type) {
-		case "db":
-			return setting.db;
 		case "general":
 			return setting.general;
 		default:
@@ -58,20 +51,6 @@ public class Setting {
 
 	}
 
-	private void readDBSettings(JsonReader reader) throws IOException {
-		reader.beginObject();
-		while (reader.hasNext()) {
-			String dbn = reader.nextName();
-			if (dbn.equals("url")) {
-				db.put("url", reader.nextString());
-			} else if (dbn.equals("id")) {
-				db.put("id", reader.nextString());
-			} else if (dbn.equals("password")) {
-				db.put("password", reader.nextString());
-			}
-		}
-		reader.endObject();
-	}
 
 	private void readGeneralSettings(JsonReader reader) throws IOException {
 		reader.beginObject();
