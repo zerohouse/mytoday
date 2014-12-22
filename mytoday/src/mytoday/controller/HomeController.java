@@ -25,6 +25,11 @@ public class HomeController {
 		http.getResp().getWriter().write("ssssss");
 		return null;
 	}
+	
+	@Post("")
+	public void sbc(Http http) throws IOException{
+		http.getResp().getWriter().write("");
+	}
 		
 	@Post("/home")
 	public String homes(Http http){
