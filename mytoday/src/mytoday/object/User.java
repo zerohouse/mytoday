@@ -1,9 +1,11 @@
 package mytoday.object;
 
 import java.util.Date;
-import mytoday.annotation.Key;
-import mytoday.annotation.Table;
-import mytoday.dao.Record;
+
+import annotation.Key;
+import annotation.Table;
+import dao.Record;
+
 
 @Table("user")
 public class User implements Record {

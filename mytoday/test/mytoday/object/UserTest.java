@@ -1,10 +1,14 @@
 package mytoday.object;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-import mytoday.dao.DBMethods;
+import java.util.List;
 
 import org.junit.Test;
+
+import dao.DBMethods;
+import dao.Record;
 
 public class UserTest {
 
@@ -30,8 +34,11 @@ public class UserTest {
 
 	@Test
 	public void getTest() {
-		System.out.println(DBMethods.get(User.class, "zerohouse"));
-		assertNotNull(DBMethods.get(User.class, "zerohouse"));
+		User user = (User) DBMethods.get(User.class, "zerohouse");
+		assertNotNull(user);
+		List<Record> list = DBMethods.getList(User.class, "zerohouse");
+		System.out.println(list);
+		System.out.println(user);
 	}
 
 	@Test
