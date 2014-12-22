@@ -1,14 +1,14 @@
 package mytoday.object;
 
 import java.util.Date;
-import mytoday.annotation.PrimaryKey;
+import mytoday.annotation.Key;
 import mytoday.annotation.Table;
 import mytoday.dao.Record;
 
 @Table("user")
 public class User implements Record {
 
-	@PrimaryKey
+	@Key
 	private String id;
 	private String password;
 	private String email;

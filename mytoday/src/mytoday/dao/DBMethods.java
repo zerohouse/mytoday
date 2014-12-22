@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import mytoday.annotation.DBExclude;
-import mytoday.annotation.PrimaryKey;
+import mytoday.annotation.Key;
 import mytoday.annotation.Table;
 
 public class DBMethods {
@@ -219,7 +219,7 @@ public class DBMethods {
 		List<Field> fields = excludeNotThisDB(cLass);
 		int columnSize = fields.size();
 		for (int i = 0; i < columnSize; i++)
-			if (fields.get(i).isAnnotationPresent(PrimaryKey.class))
+			if (fields.get(i).isAnnotationPresent(Key.class))
 				return fields.get(i);
 		return null;
 	}
