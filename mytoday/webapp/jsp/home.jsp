@@ -8,5 +8,7 @@
 </head>
 <body>
 get start홈
+
+<br>유저 : ${user}
 </body>
 </html>

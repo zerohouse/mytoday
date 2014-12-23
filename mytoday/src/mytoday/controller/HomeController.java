@@ -27,7 +27,9 @@ public class HomeController {
 		http.getReq().getRequestURI();
 		http.getResp(); // servlet Response
 		http.getResp().getWriter();
-		return new Jsp("home.jsp");
+		Jsp jsp = new Jsp("home.jsp");
+		jsp.put("user", http.getUriVariable(0));
+		return jsp;
 	}
 
 	@Post("/test.my") //Post requst api
