@@ -5,12 +5,13 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import mytoday.annotation.Controller;
-import mytoday.annotation.Get;
-import mytoday.mapping.Http;
-import mytoday.mapping.Json;
-import mytoday.mapping.Jsp;
-import mytoday.mapping.Response;
+import easymapping.annotation.Controller;
+import easymapping.annotation.Get;
+import easymapping.mapping.Http;
+import easymapping.mapping.Json;
+import easymapping.mapping.Jsp;
+import easymapping.mapping.Response;
+
 
 @Controller
 public class HomeController {
