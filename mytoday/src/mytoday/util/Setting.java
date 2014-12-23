@@ -1,4 +1,4 @@
-package mytoday;
+package mytoday.util;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -9,12 +9,14 @@ import java.util.Map;
 import com.google.gson.stream.JsonReader;
 
 public class Setting {
-
+	
+	
 	private static Setting setting = new Setting();
 
 	private Map<String, String> general = new HashMap<String, String>();
 
 	private Setting() {
+		
 		String path = Setting.class.getResource("/").getPath();
 
 		try {
@@ -41,17 +43,16 @@ public class Setting {
 
 	}
 
-	public static Map<String, String> get(String type) {
+	public static final String get(String type, String value) {
 		switch (type) {
 		case "general":
-			return setting.general;
+			return setting.general.get(value);
 		default:
 			return null;
 		}
 
 	}
-
-
+	
 	private void readGeneralSettings(JsonReader reader) throws IOException {
 		reader.beginObject();
 		while (reader.hasNext()) {
@@ -66,5 +67,4 @@ public class Setting {
 		}
 		reader.endObject();
 	}
-
 }

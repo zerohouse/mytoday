@@ -1,4 +1,4 @@
-package mytoday.url;
+package mytoday.mapping;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import mytoday.Setting;
 import mytoday.annotation.Controller;
 import mytoday.annotation.Get;
 import mytoday.annotation.Post;
+import mytoday.util.Setting;
 
 public class Url {
 
@@ -39,7 +39,7 @@ public class Url {
 
 	private final String BAD_PACKAGE_ERROR = "Unable to get resources from path '%s'. Are you sure the package '%s' exists?";
 
-	private final String PATH = Setting.get("general").get("controllerPath");
+	private final String PATH = Setting.get("general", "controllerPath");
 
 	public List<Class<?>> find(String scannedPackage) {
 		String scannedPath = scannedPackage.replace(DOT, SLASH);
@@ -87,13 +87,11 @@ public class Url {
 				for (int i = 0; i < methods.length; i++) {
 					if (methods[i].isAnnotationPresent(Get.class)) {
 						get = methods[i].getAnnotation(Get.class);
-						getMap.put(get.value(), new MethodHolder(methods[i],
-								eachClass));
+						getMap.put(get.value(), methods[i]);
 					}
 					if (methods[i].isAnnotationPresent(Post.class)) {
 						post = methods[i].getAnnotation(Post.class);
-						postMap.put(post.value(), new MethodHolder(methods[i],
-								eachClass));
+						postMap.put(post.value(), methods[i]);
 					}
 				}
 			}

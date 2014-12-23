@@ -2,37 +2,35 @@ package mytoday.controller;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import mytoday.annotation.Controller;
 import mytoday.annotation.Get;
-import mytoday.annotation.Post;
-import mytoday.url.Http;
+import mytoday.mapping.Http;
+import mytoday.mapping.Json;
+import mytoday.mapping.Jsp;
+import mytoday.mapping.Response;
 
 @Controller
 public class HomeController {
+	private static final Logger logger = LoggerFactory
+			.getLogger(HomeController.class);
 
 	@Get("/home.my")
-	public String home(Http http){
-		return "home.jsp";
+	public Response home(Http http) {
+		logger.debug("home");
+		return new Jsp("home.jsp");
 	}
-	
+
 	@Get("/index.my")
-	public String ss(Http http){
-		return "index.jsp";
+	public Response ss(Http http) {
+		return new Jsp("home.jsp");
 	}
-	
+
 	@Get("/test.my")
-	public String sss(Http http) throws IOException{
-		http.getResp().getWriter().write("ssssss");
-		return null;
+	public Response sss(Http http) throws IOException {
+		return new Json("home.jsp");
 	}
-	
-	@Post("")
-	public void sbc(Http http) throws IOException{
-		http.getResp().getWriter().write("");
-	}
-		
-	@Post("/home")
-	public String homes(Http http){
-		return null;
-	}
+
 }

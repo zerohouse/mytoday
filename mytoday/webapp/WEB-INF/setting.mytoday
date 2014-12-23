@@ -2,6 +2,7 @@
 	"general" : {
 		"url" : "http://localhost:8080",
 		"controllerPath" : "mytoday.controller",
-		"jspPath" : "jsp/"
+		"jspPath" : "jsp/",
+		"urlPattern" : "*.my"
 	}
 }
