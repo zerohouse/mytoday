@@ -1,6 +1,7 @@
 package mytoday.mapping;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -45,6 +46,11 @@ public class Http {
 	
 	public String getUriVariable(int number){
 		return params.get(number);
+	}
+
+	public void setCharacterEncoding(String encording) throws UnsupportedEncodingException {
+		req.setCharacterEncoding(encording);
+		resp.setCharacterEncoding(encording);
 	}
 
 }

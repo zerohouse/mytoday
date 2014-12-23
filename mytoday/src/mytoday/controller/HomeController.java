@@ -31,7 +31,8 @@ public class HomeController {
 
 	@Get("/test.my")
 	public Response sss(Http http) throws IOException {
-		return new Json("home.jsp");
+		
+		return new Json("고로니");
 	}
 
 }

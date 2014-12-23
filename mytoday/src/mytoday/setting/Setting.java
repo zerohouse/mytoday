@@ -11,11 +11,13 @@ public class Setting {
 	public static final String URL = "url";
 	public static final String CONTROLLER = "controllerPath";
 	public static final String JSP = "jspPath";
+	public static final String ENCORDING = "charEncoding";
 
 	private static Setting setting = new Setting();
 	private String controller;
 	private String url;
 	private String jsp;
+	private String encording;
 
 	private Setting() {
 
@@ -48,6 +50,8 @@ public class Setting {
 			return setting.controller;
 		case JSP:
 			return setting.jsp;
+		case ENCORDING:
+			return setting.encording;
 		default:
 			return null;
 		}
@@ -62,6 +66,8 @@ public class Setting {
 				controller = reader.nextString();
 			} else if (dbn.equals(JSP)) {
 				jsp = reader.nextString();
+			} else if (dbn.equals(ENCORDING)) {
+				encording = reader.nextString();
 			}
 		}
 	}

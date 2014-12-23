@@ -1,12 +1,15 @@
 package mytoday.mapping;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import mytoday.setting.Setting;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,8 +40,11 @@ public class Dispatcher extends HttpServlet {
 		dispatch(holder, new Http(req, resp));
 	}
 
-	private void dispatch(ParamHolder holder, Http http) {
-		if(holder.isParamExist()){
+	private void dispatch(ParamHolder holder, Http http) throws UnsupportedEncodingException {
+		String encording = Setting.get(Setting.ENCORDING);
+		if (Setting.get(Setting.ENCORDING) != null)
+			http.setCharacterEncoding(encording);
+		if (holder.isParamExist()) {
 			http.setParams(holder.getParams());
 		}
 		Method method = holder.getMethod();

@@ -15,7 +15,7 @@ public class Json implements Response{
 	@Override
 	public void render(Http http) throws IOException {
 		Gson gson = new Gson();
-		http.setContentType("application/json;charset=UTF-8");
+		http.setContentType("application/json");
 		http.write(gson.toJson(jsonObj));
 	}
 }
