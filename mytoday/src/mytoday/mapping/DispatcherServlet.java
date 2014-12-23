@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,9 +17,9 @@ public class DispatcherServlet extends HttpServlet {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(DispatcherServlet.class);
-	
+
 	private static final String METHOD_NAME = "Method Name = ";
-	
+
 	/**
 	 * 
 	 */
@@ -29,23 +28,28 @@ public class DispatcherServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		Method method = Url.getGetMapper().findMethod(req.getRequestURI());
-		dispatch(method, new Http(req, resp));
+		ParamHolder holder = Mapper.get(Mapper.GET, req.getRequestURI());
+		dispatch(holder, new Http(req, resp));
 	}
-	
+
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		Method method = Url.getPostMapper().findMethod(req.getRequestURI());
-		dispatch(method, new Http(req, resp));
+		ParamHolder holder = Mapper.get(Mapper.POST, req.getRequestURI());
+		dispatch(holder, new Http(req, resp));
 	}
 
-	private void dispatch(Method method, Http http) {
+	private void dispatch(ParamHolder holder, Http http) {
+		if(holder.isParamExist()){
+			http.setParams(holder.getParams());
+		}
+		Method method = holder.getMethod();
 		logger.debug(METHOD_NAME + method.getName());
 		Object instance;
 		Response render;
 		try {
-			instance = method.getDeclaringClass().getConstructor().newInstance();
+			instance = method.getDeclaringClass().getConstructor()
+					.newInstance();
 			render = (Response) method.invoke(instance, http);
 			render.render(http);
 		} catch (Exception e) {

@@ -23,8 +23,9 @@ public class HomeController {
 		return new Jsp("home.jsp");
 	}
 
-	@Get("/index.my")
+	@Get("/index/{}.my")
 	public Response ss(Http http) {
+		System.out.println(http.getUriVariable(0));
 		return new Jsp("home.jsp");
 	}
 

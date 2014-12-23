@@ -1,4 +1,4 @@
-package mytoday.util;
+package mytoday.mapping;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -10,6 +10,10 @@ import com.google.gson.stream.JsonReader;
 
 public class Setting {
 	
+	public static final String GENERAL = "general";
+	public static final String URL = "url";
+	public static final String CONTROLLER = "controllerPath";
+	public static final String JSP = "jspPath";
 	
 	private static Setting setting = new Setting();
 
@@ -21,11 +25,11 @@ public class Setting {
 
 		try {
 			JsonReader reader = new JsonReader(new FileReader(path
-					+ "../setting.mytoday"));
+					+ "../controller.setting"));
 			reader.beginObject();
 			while (reader.hasNext()) {
 				String name = reader.nextName();
-				if (name.equals("general")) {
+				if (name.equals(GENERAL)) {
 					readGeneralSettings(reader);
 					continue;
 				}
@@ -45,7 +49,7 @@ public class Setting {
 
 	public static final String get(String type, String value) {
 		switch (type) {
-		case "general":
+		case GENERAL:
 			return setting.general.get(value);
 		default:
 			return null;
@@ -57,12 +61,12 @@ public class Setting {
 		reader.beginObject();
 		while (reader.hasNext()) {
 			String dbn = reader.nextName();
-			if (dbn.equals("url")) {
-				general.put("url", reader.nextString());
-			} else if (dbn.equals("controllerPath")) {
-				general.put("controllerPath", reader.nextString());
-			} else if (dbn.equals("jspPath")) {
-				general.put("jspPath", reader.nextString());
+			if (dbn.equals(URL)) {
+				general.put(URL, reader.nextString());
+			} else if (dbn.equals(CONTROLLER)) {
+				general.put(CONTROLLER, reader.nextString());
+			} else if (dbn.equals(JSP)) {
+				general.put(JSP, reader.nextString());
 			}
 		}
 		reader.endObject();

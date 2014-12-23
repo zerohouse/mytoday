@@ -4,8 +4,6 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
-import mytoday.util.Setting;
-
 public class Jsp implements Response {
 
 	private String jspFile;
