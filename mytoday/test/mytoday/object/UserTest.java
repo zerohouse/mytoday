@@ -24,7 +24,7 @@ public class UserTest {
 		User user = new User();
 		DBMethods.update(user);
 	}
-	
+
 	@Test
 	public void setTest() {
 		User user = new User();
@@ -44,6 +44,13 @@ public class UserTest {
 	@Test
 	public void getListTest() {
 		System.out.println(DBMethods.getList(User.class));
+	}
+
+	@Test
+	public void fort() {
+		for (int i = 0; i < 1; i++) {
+			System.out.println("1");
+		}
 	}
 
 }

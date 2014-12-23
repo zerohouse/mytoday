@@ -2,11 +2,10 @@ package mytoday.controller;
 
 import java.io.IOException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import easymapping.annotation.Controller;
 import easymapping.annotation.Get;
+import easymapping.annotation.Post;
 import easymapping.mapping.Http;
 import easymapping.mapping.Json;
 import easymapping.mapping.Jsp;
@@ -15,24 +14,24 @@ import easymapping.mapping.Response;
 
 @Controller
 public class HomeController {
-	private static final Logger logger = LoggerFactory
-			.getLogger(HomeController.class);
 
 	@Get("/home.my")
-	public Response home(Http http) {
-		logger.debug("home");
+	public Response home() {
 		return new Jsp("home.jsp");
 	}
 
 	@Get("/index/{}.my")
-	public Response ss(Http http) {
-		System.out.println(http.getUriVariable(0));
+	public Response index(Http http) throws IOException {
+		http.getUriVariable(0); // returns {}value
+		http.getReq(); // servlet Request
+		http.getReq().getRequestURI();
+		http.getResp(); // servlet Response
+		http.getResp().getWriter();
 		return new Jsp("home.jsp");
 	}
 
-	@Get("/test.my")
+	@Post("/test.my") //Post requst api
 	public Response sss(Http http) throws IOException {
-		
 		return new Json("고로니");
 	}
 
