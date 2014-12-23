@@ -1,26 +1,24 @@
-package mytoday.mapping;
+package mytoday.setting;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.google.gson.stream.JsonReader;
 
 public class Setting {
-	
-	public static final String GENERAL = "general";
+
 	public static final String URL = "url";
 	public static final String CONTROLLER = "controllerPath";
 	public static final String JSP = "jspPath";
-	
-	private static Setting setting = new Setting();
 
-	private Map<String, String> general = new HashMap<String, String>();
+	private static Setting setting = new Setting();
+	private String controller;
+	private String url;
+	private String jsp;
 
 	private Setting() {
-		
+
 		String path = Setting.class.getResource("/").getPath();
 
 		try {
@@ -28,12 +26,7 @@ public class Setting {
 					+ "../controller.setting"));
 			reader.beginObject();
 			while (reader.hasNext()) {
-				String name = reader.nextName();
-				if (name.equals(GENERAL)) {
-					readGeneralSettings(reader);
-					continue;
-				}
-				reader.skipValue();
+				readGeneralSettings(reader);
 			}
 			reader.endObject();
 			reader.close();
@@ -47,28 +40,29 @@ public class Setting {
 
 	}
 
-	public static final String get(String type, String value) {
-		switch (type) {
-		case GENERAL:
-			return setting.general.get(value);
+	public static final String get(String value) {
+		switch (value) {
+		case URL:
+			return setting.url;
+		case CONTROLLER:
+			return setting.controller;
+		case JSP:
+			return setting.jsp;
 		default:
 			return null;
 		}
-
 	}
-	
+
 	private void readGeneralSettings(JsonReader reader) throws IOException {
-		reader.beginObject();
 		while (reader.hasNext()) {
 			String dbn = reader.nextName();
 			if (dbn.equals(URL)) {
-				general.put(URL, reader.nextString());
+				url = reader.nextString();
 			} else if (dbn.equals(CONTROLLER)) {
-				general.put(CONTROLLER, reader.nextString());
+				controller = reader.nextString();
 			} else if (dbn.equals(JSP)) {
-				general.put(JSP, reader.nextString());
+				jsp = reader.nextString();
 			}
 		}
-		reader.endObject();
 	}
 }

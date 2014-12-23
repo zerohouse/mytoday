@@ -10,6 +10,7 @@ import java.util.List;
 import mytoday.annotation.Controller;
 import mytoday.annotation.Get;
 import mytoday.annotation.Post;
+import mytoday.setting.Setting;
 
 public class Mapper {
 
@@ -19,7 +20,7 @@ public class Mapper {
 	private static final char SLASH = '/';
 	private static final String CLASS_SUFFIX = ".class";
 	private static final String BAD_PACKAGE_ERROR = "Unable to get resources from path '%s'. Are you sure the package '%s' exists?";
-	private static final String PATH = Setting.get("general", "controllerPath");
+	private static final String PATH = Setting.get(Setting.CONTROLLER);
 	private static Mapper instance = new Mapper();
 
 	private Match getMap = new Match();

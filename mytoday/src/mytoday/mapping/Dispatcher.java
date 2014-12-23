@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,11 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@WebServlet("*.my")
-public class DispatcherServlet extends HttpServlet {
+public class Dispatcher extends HttpServlet {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(DispatcherServlet.class);
+			.getLogger(Dispatcher.class);
 
 	private static final String METHOD_NAME = "Method Name = ";
 
