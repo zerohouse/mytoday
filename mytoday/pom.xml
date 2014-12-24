@@ -76,14 +76,14 @@
 			<artifactId>easyjdbc</artifactId>
 			<version>0.0.1</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/jar/easyjdbc-0.0.1.jar</systemPath>
+			<systemPath>${basedir}/lib/easyjdbc-0.0.1.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>easy</groupId>
 			<artifactId>easymapping</artifactId>
 			<version>0.0.1</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/jar/easymapping-0.0.1.jar</systemPath>
+			<systemPath>${basedir}/lib/easymapping-0.0.1.jar</systemPath>
 		</dependency>
 	</dependencies>
 
