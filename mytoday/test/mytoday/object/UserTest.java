@@ -8,7 +8,7 @@ import java.util.List;
 import org.junit.Test;
 
 import easyjdbc.dao.DBMethods;
-import easyjdbc.dao.Record;
+
 
 public class UserTest {
 
@@ -36,7 +36,7 @@ public class UserTest {
 	public void getTest() {
 		User user = (User) DBMethods.get(User.class, "zerohouse");
 		assertNotNull(user);
-		List<Record> list = DBMethods.getList(User.class, "zerohouse");
+		List<User> list = DBMethods.getList(User.class, "zerohouse");
 		System.out.println(list);
 		System.out.println(user);
 	}

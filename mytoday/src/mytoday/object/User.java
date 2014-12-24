@@ -17,13 +17,6 @@ public class User implements Record {
 	private String gender;
 	private Date timestamp;
 
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", password=" + password + ", email=" + email
-				+ ", nickname=" + nickname + ", gender=" + gender
-				+ ", timestamp=" + timestamp + "]";
-	}
-
 	public String getId() {
 		return id;
 	}
@@ -56,6 +49,10 @@ public class User implements Record {
 		nickname = params.length < 4 ? null : (String) params[3];
 		gender = params.length < 5 ? null : (String) params[4];
 		timestamp = params.length < 6 ? null : (Date) params[5];
+	}
+
+	public boolean isPasswordCorrect(User userpassed) {
+		return password.equals(userpassed.getPassword());
 	}
 
 }
