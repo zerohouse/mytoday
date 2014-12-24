@@ -31,7 +31,7 @@ public class UserControllerTest {
 		user.set("zaertz", "sss");
 		Mockito.when(request.getParameter("user")).thenReturn(gson.toJson(user));
 		
-		Json json = (Json) usercon.Login(http);
+		Json json = (Json) usercon.login(http);
 		Result result = (Result) json.getJsonObj();
 		assertFalse(result.isSuccess());
 		
@@ -39,7 +39,7 @@ public class UserControllerTest {
 		user.set("zz", "ssdfss");
 		Mockito.when(request.getParameter("user")).thenReturn(gson.toJson(user));
 		
-		json = (Json) usercon.Login(http);
+		json = (Json) usercon.login(http);
 		result = (Result) json.getJsonObj();
 		assertFalse(result.isSuccess());
 		
@@ -47,7 +47,7 @@ public class UserControllerTest {
 		user.set("zz", "ss");
 		Mockito.when(request.getParameter("user")).thenReturn(gson.toJson(user));
 		
-		json = (Json) usercon.Login(http);
+		json = (Json) usercon.login(http);
 		result = (Result) json.getJsonObj();
 		assertTrue(result.isSuccess());
 	}
