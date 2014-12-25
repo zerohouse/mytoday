@@ -4,10 +4,9 @@ import java.util.Date;
 
 import easyjdbc.annotation.Key;
 import easyjdbc.annotation.Table;
-import easyjdbc.dao.Record;
 
 @Table("user")
-public class User implements Record {
+public class User {
 
 	@Key
 	private String id;
@@ -21,34 +20,48 @@ public class User implements Record {
 		return id;
 	}
 
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	public String getPassword() {
 		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getEmail() {
 		return email;
 	}
 
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public String getNickname() {
 		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
 	public String getGender() {
 		return gender;
 	}
 
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
 	public Date getTimestamp() {
 		return timestamp;
 	}
 
-	@Override
-	public void set(Object... params) {
-		id = params.length < 1 ? null : (String) params[0];
-		password = params.length < 2 ? null : (String) params[1];
-		email = params.length < 3 ? null : (String) params[2];
-		nickname = params.length < 4 ? null : (String) params[3];
-		gender = params.length < 5 ? null : (String) params[4];
-		timestamp = params.length < 6 ? null : (Date) params[5];
+	public void setTimestamp(Date timestamp) {
+		this.timestamp = timestamp;
 	}
 
 	public boolean isPasswordCorrect(User userpassed) {

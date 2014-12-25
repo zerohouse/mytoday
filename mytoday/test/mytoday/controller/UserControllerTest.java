@@ -28,7 +28,8 @@ public class UserControllerTest {
 	public void loginTest() {
 		//없는 유저
 		User user = new User();
-		user.set("zaertz", "sss");
+		user.setId("zaertz");
+		user.setPassword("sss");
 		Mockito.when(request.getParameter("user")).thenReturn(gson.toJson(user));
 		
 		Json json = (Json) usercon.login(http);
@@ -36,7 +37,8 @@ public class UserControllerTest {
 		assertFalse(result.isSuccess());
 		
 		//패스워드 틀릴떄
-		user.set("zz", "ssdfss");
+		user.setId("zz");
+		user.setPassword("ssdfss");
 		Mockito.when(request.getParameter("user")).thenReturn(gson.toJson(user));
 		
 		json = (Json) usercon.login(http);
@@ -44,7 +46,7 @@ public class UserControllerTest {
 		assertFalse(result.isSuccess());
 		
 		//성공
-		user.set("zz", "ss");
+		user.setPassword("ss");
 		Mockito.when(request.getParameter("user")).thenReturn(gson.toJson(user));
 		
 		json = (Json) usercon.login(http);
