@@ -1,0 +1,37 @@
+@CHARSET "UTF-8";
+
+.top-buffer {
+	margin-top: 20px;
+}
+
+.left-buffer {
+	margin-left: 20px;
+}
+
+.right-buffer {
+	margin-right: 20px;
+}
+
+.bottom-buffer {
+	margin-bottom: 20px;
+}
+
+.font-big {
+	font-size: 150%
+}
+
+#warring {
+	width: 100%;
+	height: 100%;
+	padding-top: 20%;
+	position: fixed;
+	z-index: 9999;
+	text-align: center;
+	font-size: 70px;
+	background-color: rgba(0, 0, 0, 0.17);
+	display:none;
+}
+
+.fixed-time-bar {
+	height: 480px
+}

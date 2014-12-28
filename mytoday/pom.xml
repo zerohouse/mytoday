@@ -43,6 +43,12 @@
 			<artifactId>tomcat-jsp-api</artifactId>
 			<version>${tomcat.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
@@ -71,6 +77,9 @@
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
+
+
+
 		<dependency>
 			<groupId>easy</groupId>
 			<artifactId>easyjdbc</artifactId>

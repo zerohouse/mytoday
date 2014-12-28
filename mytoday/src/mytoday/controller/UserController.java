@@ -16,14 +16,12 @@ import easymapping.response.Response;
 public class UserController {
 	
 	@Get("/users/logout.my")
-	public Response logout(Http http) throws IOException{
+	public void logout(Http http) throws IOException{
 		http.removeSessionAttribute("user");
-		http.write("s");
-		return new Json("s");
-		
+		http.sendRedirect("/");
 	}
 	
-	@Get("/users/{}.my")
+	@Post("/users/login.my")
 	public Response login(Http http) {
 		User userpassed = http.getJsonObject(User.class, "user");
 		if (userpassed == null)

@@ -15,6 +15,10 @@ public class User {
 	private String nickname;
 	private String gender;
 	private Date timestamp;
+	
+	public boolean isPasswordCorrect(User userpassed) {
+		return password.equals(userpassed.getPassword());
+	}
 
 	public String getId() {
 		return id;
@@ -62,10 +66,6 @@ public class User {
 
 	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
-	}
-
-	public boolean isPasswordCorrect(User userpassed) {
-		return password.equals(userpassed.getPassword());
 	}
 
 }

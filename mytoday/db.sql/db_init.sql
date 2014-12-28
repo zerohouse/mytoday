@@ -29,7 +29,23 @@ CREATE TABLE `user` (
 	`gender` CHAR(1) NULL,
 	`timestamp` DATETIME NOT NULL,
 	PRIMARY KEY(`id`)
-) ENGINE = InnoDB;
+) ENGINE = InnoDB DEFAULT CHARACTER SET utf8;
+
+DROP TABLE IF EXISTS `schedule`;
+
+-- Table `schedule`
+CREATE TABLE `schedule` (
+	`id` INTEGER NOT NULL AUTO_INCREMENT,
+	`date` DATE NULL,
+	`userId` VARCHAR(32) NULL,
+	`type` VARCHAR(32) NULL,
+	`time` TINYINT NULL,
+	`term` TINYINT NULL,
+	`head` VARCHAR(32) NULL,
+	`body` VARCHAR(2000) NULL,
+	PRIMARY KEY(`id`),
+	FOREIGN KEY (`userId`) REFERENCES `user` (`id`)
+) ENGINE = InnoDB DEFAULT CHARACTER SET utf8;
 
 --
 --

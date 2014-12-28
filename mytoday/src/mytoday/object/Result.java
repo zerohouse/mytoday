@@ -2,20 +2,19 @@ package mytoday.object;
 
 public class Result {
 	private boolean success;
-	private String errorMesage;
+	private String error;
 
-	public Result(boolean success, String errorMesage) {
-		super();
+	public Result(boolean success, String error) {
 		this.success = success;
-		this.errorMesage = errorMesage;
+		this.error = error;
 	}
 
 	public boolean isSuccess() {
 		return success;
 	}
 
-	public String getErrorMesage() {
-		return errorMesage;
+	public String getError() {
+		return error;
 	}
 	
 
