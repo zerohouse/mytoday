@@ -29,9 +29,22 @@
 	text-align: center;
 	font-size: 70px;
 	background-color: rgba(0, 0, 0, 0.17);
-	display:none;
+	display: none;
 }
 
 .fixed-time-bar {
 	height: 480px
+}
+
+#datepicker {
+	font-size: 30px;
+	border: none;
+	border-radius: 10px;
+	margin-bottom: 10px;
+	text-align: center;
+	width: 200px;
+}
+
+.big-icon{
+	font-size:25px;
 }

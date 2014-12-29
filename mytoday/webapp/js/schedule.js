@@ -142,11 +142,28 @@ var pieChartReset = function(){
 		tooltipTemplate : "<%if (label){%><%=label%><%}%>"
 	});
 	
+	$('#pieChart').css('width', '100%');
+	$('#pieChart').css('height', '100%');
+
 }
 
 $(function() {
-	
+
 	var datepicker = $('#datepicker');
+	
+	$('span.big-icon:eq(0)').click(function(){
+		var date = datepicker.datepicker('getDate');
+		date.setDate(date.getDate()-1);
+		datepicker.datepicker('setDate', date);
+	});
+	
+	$('span.big-icon:eq(1)').click(function(){
+		var date = datepicker.datepicker('getDate');
+		date.setDate(date.getDate()+1);
+		datepicker.datepicker('setDate', date);
+	});
+	
+	
 	datepicker.datepicker({
 	    format: "yyyy-mm-dd",
 	    autoclose: true
@@ -171,17 +188,10 @@ $(function() {
 			}
 		});
 	});
-
-	var ctx = document.getElementById("pieChart").getContext("2d");
-
-	pieChart = new Chart(ctx).Pie([], {
-		tooltipTemplate : "<%if (label){%><%=label%><%}%>"
-	});
+	
+	datepicker.datepicker('setDate', new Date());
 	
 
-
-	$('#pieChart').css('width', '100%');
-	$('#pieChart').css('height', '100%');
 
 	$("#times").slider({
 		range : "min",

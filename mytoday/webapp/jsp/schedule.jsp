@@ -5,6 +5,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%@ include file="/components/_css.jspf"%>
+<link href="/plugin/bootstrap/datepicker/datepicker.css" rel="stylesheet" media="screen">
+
 <title>나의 하루.mytoday</title>
 </head>
 <body ng-app='module'>
@@ -13,9 +15,12 @@
 	<br>
 	<br>
 	<div class='container'>
-		<div class='jumbotron'>
-			<input id='datepicker' ng-model="date" type="text" class="span2"><span class="add-on"><span
-					class="glyphicon glyphicon-calendar"></span></span>
+		<div class='row'>
+			<div class='col-md=5 col-md-offset-1'>
+			<span class="glyphicon glyphicon-chevron-left big-icon"></span>
+			 <input id='datepicker' ng-model="date" type="text"> 
+			 <span class="glyphicon glyphicon-chevron-right big-icon"></span>
+			</div>
 		</div>
 		<div class='row' ng-controller='TodayDoingController'>
 			<div class='col-md-3'>
