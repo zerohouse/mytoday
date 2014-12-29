@@ -16,7 +16,7 @@ public class Schedule {
 	private String userId;
 	private String type;
 	private int time;
-	private int term;
+	private int startTime;
 	private String head;
 	private String body;
 
@@ -76,12 +76,12 @@ public class Schedule {
 		this.time = time;
 	}
 
-	public int getTerm() {
-		return term;
+	public int getStartTime() {
+		return startTime;
 	}
 
-	public void setTerm(int term) {
-		this.term = term;
+	public void setStartTime(int startTime) {
+		this.startTime = startTime;
 	}
 
 }

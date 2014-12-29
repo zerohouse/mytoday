@@ -5,4 +5,5 @@
 <script src="/plugin/bootstrap/bootstrap.min.js"></script>
 <script src="/plugin/bootstrap/bootstrap-tooltip.js"></script>
 <script src="/plugin/angular/angular.js"></script>
+<script src="/plugin/angular/ngDraggable/ngDraggable.js"></script>
 <script src="/js/header.js"></script>

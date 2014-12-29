@@ -40,9 +40,22 @@ CREATE TABLE `schedule` (
 	`userId` VARCHAR(32) NULL,
 	`type` VARCHAR(32) NULL,
 	`time` TINYINT NULL,
-	`term` TINYINT NULL,
+	`startTime` TINYINT NULL,
 	`head` VARCHAR(32) NULL,
 	`body` VARCHAR(2000) NULL,
+	PRIMARY KEY(`id`),
+	FOREIGN KEY (`userId`) REFERENCES `user` (`id`)
+) ENGINE = InnoDB DEFAULT CHARACTER SET utf8;
+
+
+DROP TABLE IF EXISTS `type`;
+
+-- Table `type`
+CREATE TABLE `type` (
+	`id` INTEGER NOT NULL AUTO_INCREMENT,
+	`userId` VARCHAR(32) NULL,
+	`name` VARCHAR(32) NULL,
+	`color` VARCHAR(32) NULL,
 	PRIMARY KEY(`id`),
 	FOREIGN KEY (`userId`) REFERENCES `user` (`id`)
 ) ENGINE = InnoDB DEFAULT CHARACTER SET utf8;

@@ -2,7 +2,7 @@
  * 
  */
 
-var app = angular.module('module', []);
+var app = angular.module('module', ['ngDraggable']);
 
 
 var controllers = {};

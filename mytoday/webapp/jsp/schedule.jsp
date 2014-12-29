@@ -5,7 +5,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%@ include file="/components/_css.jspf"%>
-<link href="/plugin/bootstrap/datepicker/datepicker.css" rel="stylesheet" media="screen">
+<link href="/plugin/bootstrap/datepicker/datepicker.css"
+	rel="stylesheet" media="screen">
+<link href="/plugin/bootstrap/colorpicker/bootstrap-colorpicker.css"
+	rel="stylesheet" media="screen">
 
 <title>나의 하루.mytoday</title>
 </head>
@@ -17,41 +20,56 @@
 	<div class='container'>
 		<div class='row'>
 			<div class='col-md=5 col-md-offset-1'>
-			<span class="glyphicon glyphicon-chevron-left big-icon"></span>
-			 <input id='datepicker' ng-model="date" type="text"> 
-			 <span class="glyphicon glyphicon-chevron-right big-icon"></span>
+				<span class="glyphicon glyphicon-chevron-left big-icon"></span> <input
+					id='datepicker' ng-model="date" type="text"> <span
+					class="glyphicon glyphicon-chevron-right big-icon"></span>
 			</div>
 		</div>
 		<div class='row' ng-controller='TodayDoingController'>
-			<div class='col-md-3'>
-				<div class='panel panel-success'>
-					<div class='panel-heading'>시간</div>
-						<ul class="list-group fixed-time-bar">
-							<li ng-repeat="do in done" class="list-group-item" style="
-							padding-top:0;
-							margin-top:{{margin(do.term)}};
-							height:{{height(do.time)}};
-							line-height:{{height(do.time)}};
-							background-color:{{color(do.type)}};
-							">{{do.head}}
-								{{do.type}} {{timeString(do.time)}}</li>
-						</ul>
-					</div>
-			</div>
-			<div class='col-md-5'>
-				<div class='panel panel-primary'
-					>
-					<div class='panel-heading'>오늘 한 일</div>
+
+			<div ng-repeat='type in types' class='col-md-4'>
+				<div class='panel' ng-style="{'border-color': type.color}">
+					<div class='panel-heading'
+						ng-style="{'color': getTextColor(type.color),'background-color':type.color}">{{type.name}}</div>
 					<ul class="list-group">
-						<li ng-repeat="do in done" class="list-group-item" ng-click="toggle(do)">{{do.head}}
-							{{do.type}} {{timeString(do.time)}}
-							<div ng-show="do.showbody">{{do.body}}</div>	
+						<li ng-repeat="eachdata in dataarray" class="list-group-item"
+							ng-click="toggle(eachdata.showbody)">{{eachdata.head}}
+							{{timeString(eachdata.time)}}
+							<div ng-show="eachdata.showbody">{{eachdata.body}}</div>
 						</li>
 						<li class="list-group-item"><a type="button"
-							data-toggle="modal" data-target="#newDone">추가하기</a></li>
+							data-toggle="modal" ng-click="newDone(type)" data-target="#newDone">한일 추가하기 <span class='glyphicon glyphicon-plus'></span></a>
+						</li>
 					</ul>
 				</div>
 			</div>
+
+			<div class='col-md-4'>
+				<div class='panel'>
+
+					<div class="input-group type" ng-repeat="type in types">
+						<span class="input-group-addon"><i></i></span> <input
+							type='hidden' class='colorpicker' ng-model="type.color"
+							value="type.color"> <input type="text"
+							class="form-control" placeholder="새로운 유형" ng-model="type.name"
+							value="type.name"><span class="input-group-addon"><span
+							class='glyphicon glyphicon-minus'></span></span>
+					</div>
+
+					<div class="input-group type">
+						<span class="input-group-addon"><i></i></span> <input
+							type='hidden' class='colorpicker' ng-model="newType.color">
+						<input type="text" class="form-control" placeholder="새로운 유형"
+							ng-model="newType.name"> <span class="input-group-addon"
+							ng-click="addType()">새로운 유형 <span
+							class='glyphicon glyphicon-plus'></span>
+						</span>
+					</div>
+
+				</div>
+			</div>
+
+
 			<div class='col-md-4'>
 				<div class='panel panel-primary'>
 					<div class='panel-heading'>나의 하루</div>
@@ -74,17 +92,12 @@
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
-					<input type="text" placeholder="한 일" class="form-control" ng-model="content.head">
+					<h1>{{content.type.name}}</h1>
 				</div>
 				<div class="modal-body">
-					<div class="form-group">
-						<div class="btn-group" data-toggle="buttons">
-							<label ng-repeat="type in types" class="btn btn-primary"
-								ng-class="{active:type.on}"> <input type="radio"
-								ng-value="type.name"> {{type.name}}
-							</label>
-						</div>
-					</div>
+				
+					<input type="text" placeholder="한 일" class="form-control"
+						ng-model="content.head">
 
 					<div class="form-group">
 						<label for="recipient-name" class="control-label">몇시간 했나요?
@@ -94,7 +107,8 @@
 					</div>
 
 					<div class="form-group">
-						<textarea placeholder="내용" class="form-control" ng-model="content.body"></textarea>
+						<textarea placeholder="내용" class="form-control"
+							ng-model="content.body"></textarea>
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -109,5 +123,6 @@
 	<%@ include file="/components/_imports.jspf"%>
 	<script src="/plugin/chartjs/Chart.min.js"></script>
 	<script src="/plugin/bootstrap/bootstrap-datepicker.js"></script>
+	<script src="/plugin/bootstrap/colorpicker/bootstrap-colorpicker.js"></script>
 	<script src="/js/schedule.js"></script>
 </html>

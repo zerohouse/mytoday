@@ -3,12 +3,15 @@ package mytoday.controller;
 
 import mytoday.object.Result;
 import mytoday.object.Schedule;
+import mytoday.object.Type;
 import mytoday.object.User;
 import easyjdbc.dao.DBMethods;
 import easymapping.annotation.Controller;
+import easymapping.annotation.Get;
 import easymapping.annotation.Post;
 import easymapping.mapping.Http;
 import easymapping.response.Json;
+import easymapping.response.Jsp;
 import easymapping.response.Response;
 
 @Controller
@@ -32,4 +35,14 @@ public class ScheduleController {
 			return null;
 		return new Json(DBMethods.getList(Schedule.class, "userId=? and date=?", user.getId(), http.getParameter("date")));
 	}
+	
+	@Get("/schedule/index.my")
+	public Response index(Http http){
+		User user = http.getSessionAttribute(User.class, "user");
+		if(user==null)
+			return null;
+		return new Jsp("schedule.jsp");
+	}
+	
+	
 }

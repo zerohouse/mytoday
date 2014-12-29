@@ -10,6 +10,7 @@ import easymapping.annotation.Get;
 import easymapping.annotation.Post;
 import easymapping.mapping.Http;
 import easymapping.response.Json;
+import easymapping.response.Jsp;
 import easymapping.response.Response;
 
 @Controller
@@ -33,5 +34,15 @@ public class UserController {
 			return new Json(new Result(false, "패스워드가 틀렸습니다."));
 		http.setSessionAttribute("user", fromDB);
 		return new Json(new Result(true, null));
+	}
+	
+	@Get("/users/login.my")
+	public Response loginPage(Http http) {
+		return new Jsp("schedule.jsp");
+	}
+	
+	@Get("/users/register.my")
+	public Response register(Http http) {
+		return new Jsp("schedule.jsp");
 	}
 }
