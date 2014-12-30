@@ -18,17 +18,50 @@ app.controller('TodayDoingController', [
 			
 			// 이모티콘
 			
-			$scope.emoticonSelected = [1,7];
+			$scope.dateheader = {};
+			
+			$scope.dateheader.emoticonSelected = [1,7];
 			
 			$scope.emoticon = emoticon;
 			
 			$scope.emoticonSelect = function(e){
-				$scope.emoticonSelected = e;
+				$scope.dateheader.emoticonSelected = e;
+				$scope.dateHeaderUpdate();
 			}
 			
 			$scope.emoticonSet = function(array){
 				return array[0]+"px " + array[1]+"px"
 			}
+			
+			$scope.dateHeaderUpdate = function(){
+				clearTimeout($scope.dateHeaderTimer);
+				$scope.dateHeaderTimer = setTimeout(function() {
+					var dateheader = {};
+					dateheader.date = $scope.date;
+					dateheader.header = $scope.dateheader.header;
+					dateheader.emoticon = JSON.stringify($scope.dateheader.emoticonSelected);
+					$.ajax({
+						url : "/dateheader/update.my",
+						type : "POST",
+						data : {
+							dateheader : JSON.stringify(dateheader)
+						}
+					}).done(function(result) {
+						if (result.success) {
+						} else {
+							warring("저장 오류" + result.error);
+						}
+					});
+				}, 3000);
+			}
+			
+			$scope.dateHeaderSetting = function(dateheader){
+				$scope.dateheader.header = dateheader.header;
+				$scope.dateheader.emoticonSelected = JSON.parse(dateheader.emoticon);
+				$scope.apply();
+			}
+			
+			
 
 			$scope.color = function(type) {
 				return types[index(type)].color;
@@ -384,6 +417,7 @@ $(function() {
 		format : "yyyy-mm-dd",
 		autoclose : true
 	}).on('changeDate', function(e) {
+		clearTimeout(controllers.TodayDoingController.dateHeaderTimer);
 		$.ajax({
 			url : "/schedule/getlist.my",
 			type : "POST",
@@ -406,6 +440,17 @@ $(function() {
 					pieChart.types[pieChart.types.length] = data[i].type;
 				}
 			}
+		});
+		$.ajax({
+			url : "/dateheader/get.my",
+			type : "POST",
+			data : {
+				date : datepicker.val()
+			}
+		}).done(function(data) {
+			if (data == null)
+				return;
+			controllers.TodayDoingController.dateHeaderSetting(data);
 		});
 	});
 

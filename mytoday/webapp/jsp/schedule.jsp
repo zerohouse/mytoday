@@ -35,7 +35,7 @@
 					<div class="input-group-addon transparent">
 						<button type="button" class="transparent" data-toggle="dropdown"
 							aria-expanded="false">
-							<div class="emoticon" ng-style="{'background-position':emoticonSet(emoticonSelected)}" ></div>
+							<div class="emoticon" ng-style="{'background-position':emoticonSet(dateheader.emoticonSelected)}" ></div>
 						</button>
 						<ul class="dropdown-menu emoticonWrap" role="menu">
 							<li ng-repeat="earray in emoticon">
@@ -47,7 +47,7 @@
 					</div>
 
 
-					<input class='input-heading' placeholder="오늘은 한마디로!" />
+					<input class='input-heading' ng-model='dateheader.header' ng-change="dateHeaderUpdate()" placeholder="오늘은 한마디로!" />
 				</div>
 			</div>
 		</div>

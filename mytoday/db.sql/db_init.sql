@@ -61,6 +61,19 @@ CREATE TABLE `type` (
 	FOREIGN KEY (`userId`) REFERENCES `user` (`id`)
 ) ENGINE = InnoDB DEFAULT CHARACTER SET utf8;
 
+
+DROP TABLE IF EXISTS `dateheader`;
+
+-- Table `dateheader`
+CREATE TABLE `dateheader` (
+	`date` DATE NOT NULL,
+	`userId` VARCHAR(32) NOT NULL,
+	`header` VARCHAR(32) NULL,
+	`emoticon` VARCHAR(32) NULL,
+	PRIMARY KEY(`date`, `userId`),
+	FOREIGN KEY (`userId`) REFERENCES `user` (`id`)
+) ENGINE = InnoDB DEFAULT CHARACTER SET utf8;
+
 --
 --
 --DROP TABLE IF EXISTS `done`;
