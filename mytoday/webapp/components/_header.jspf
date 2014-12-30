@@ -16,12 +16,12 @@
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
 				<li><a href="#">나의 하루</a></li>
-				<li class="dropdown"><a href="#" class="dropdown-toggle"
+			<!-- 	<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown">커뮤니티 <b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li><a href="/board/bugreport/">버그제보</a></li>
 						<li><a href="/board/free/">자유게시판</a></li>
-					</ul></li>
+					</ul></li> -->
 
 				<c:choose>
 					<c:when test="${not empty sessionScope.user}">

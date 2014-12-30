@@ -55,8 +55,8 @@
 		<div class='container'>
 			<div class='row'>
 				<div class='col-md-8'>
-					<div ng-repeat='type in types'>
-						<div class='panel' ng-style="{'border-color': type.color}">
+					<div ng-repeat='type in types' class="col-md-6">
+						<div  class='panel' ng-style="{'border-color': type.color}">
 							<div class='panel-heading'
 								ng-style="{'color': getTextColor(type.color),'background-color':type.color}">{{type.name}}</div>
 							<ul class="list-group">
@@ -67,13 +67,12 @@
 								</li>
 								<li class="list-group-item"><a type="button"
 									data-toggle="modal" ng-click="newDone(type)"
-									data-target="#newDone">한일 추가하기 <span
+									data-target="#newDone">추가하기 <span
 										class='glyphicon glyphicon-plus'></span></a></li>
 							</ul>
 						</div>
 					</div>
 				</div>
-
 
 				<div class='col-md-4'>
 					<div class='panel panel-primary'>

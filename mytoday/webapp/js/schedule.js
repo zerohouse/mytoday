@@ -18,9 +18,13 @@ app.controller('TodayDoingController', [
 			
 			// 이모티콘
 			
-			$scope.dateheader = {};
 			
-			$scope.dateheader.emoticonSelected = [1,7];
+			$scope.dateheaderReset = function(){
+				$scope.dateheader = {};
+				$scope.dateheader.emoticonSelected = [1,7];
+			}
+			
+			$scope.dateheaderReset();
 			
 			$scope.emoticon = emoticon;
 			
@@ -58,7 +62,7 @@ app.controller('TodayDoingController', [
 			$scope.dateHeaderSetting = function(dateheader){
 				$scope.dateheader.header = dateheader.header;
 				$scope.dateheader.emoticonSelected = JSON.parse(dateheader.emoticon);
-				$scope.apply();
+				$scope.$apply();
 			}
 			
 			
@@ -278,7 +282,10 @@ function parseChartData(data) {
 	if(controllers.TodayDoingController.types == undefined)
 		setTimeout(function(){parseChartData(data)}, 500);
 	var result = {};
+	if(controllers.TodayDoingController.types == undefined)
+		controllers.TodayDoingController.types = {};
 	var type = controllers.TodayDoingController.types[data.type];
+	
 
 	result.highlight = ColorLuminance(type.color, 0.3);
 	result.color = type.color;
@@ -384,13 +391,9 @@ $(function() {
 			updateType($(this).data("id"));
 		});
 		}
-		
-		
-		
-
 	});
 	
-	
+	setTimeout(function(){
 
 	$('.type').colorpicker({
 		'input' : 'input.colorpicker',
@@ -448,8 +451,10 @@ $(function() {
 				date : datepicker.val()
 			}
 		}).done(function(data) {
-			if (data == null)
+			if (data == null){
+				$scope.dateheaderReset();
 				return;
+				}
 			controllers.TodayDoingController.dateHeaderSetting(data);
 		});
 	});
@@ -466,4 +471,6 @@ $(function() {
 			controllers.inputWindow.$apply();
 		}
 	});
+	
+	}, 300);
 });
