@@ -14,7 +14,7 @@ public class Schedule {
 	@DateFormat("yyyy-MM-dd")
 	private Date date;
 	private String userId;
-	private String type;
+	private int type;
 	private int time;
 	private int startTime;
 	private String head;
@@ -60,11 +60,11 @@ public class Schedule {
 		this.userId = userId;
 	}
 
-	public String getType() {
+	public int getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(int type) {
 		this.type = type;
 	}
 

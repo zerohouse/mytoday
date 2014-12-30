@@ -17,64 +17,93 @@
 	<br>
 	<br>
 	<br>
-	<div class='container'>
-		<div class='row'>
-			<div class='col-md=5 col-md-offset-1'>
-				<span class="glyphicon glyphicon-chevron-left big-icon"></span> <input
-					id='datepicker' ng-model="date" type="text"> <span
-					class="glyphicon glyphicon-chevron-right big-icon"></span>
+
+	<div ng-controller='TodayDoingController'>
+		<div class='container'>
+			<div class='row'>
+				<div class='col-md=5 col-md-offset-1'>
+					<span class="glyphicon glyphicon-chevron-left big-icon"></span> <input
+						id='datepicker' ng-model="date" type="text"> <span
+						class="glyphicon glyphicon-chevron-right big-icon"></span>
+				</div>
 			</div>
 		</div>
-		<div class='row' ng-controller='TodayDoingController'>
 
-			<div ng-repeat='type in types' class='col-md-4'>
-				<div class='panel' ng-style="{'border-color': type.color}">
-					<div class='panel-heading'
-						ng-style="{'color': getTextColor(type.color),'background-color':type.color}">{{type.name}}</div>
-					<ul class="list-group">
-						<li ng-repeat="eachdata in dataarray" class="list-group-item"
-							ng-click="toggle(eachdata.showbody)">{{eachdata.head}}
-							{{timeString(eachdata.time)}}
-							<div ng-show="eachdata.showbody">{{eachdata.body}}</div>
-						</li>
-						<li class="list-group-item"><a type="button"
-							data-toggle="modal" ng-click="newDone(type)" data-target="#newDone">한일 추가하기 <span class='glyphicon glyphicon-plus'></span></a>
-						</li>
-					</ul>
-				</div>
-			</div>
-
-			<div class='col-md-4'>
-				<div class='panel'>
-
-					<div class="input-group type" ng-repeat="type in types">
-						<span class="input-group-addon"><i></i></span> <input
-							type='hidden' class='colorpicker' ng-model="type.color"
-							value="type.color"> <input type="text"
-							class="form-control" placeholder="새로운 유형" ng-model="type.name"
-							value="type.name"><span class="input-group-addon"><span
-							class='glyphicon glyphicon-minus'></span></span>
+		<div class='jumbotron jumbo-padding'>
+			<div class='container'>
+				<div class='input-group'>
+					<div class="input-group-addon transparent">
+						<button type="button" class="transparent" data-toggle="dropdown"
+							aria-expanded="false">
+							<div class="emoticon" ng-style="{'background-position':emoticonSet(emoticonSelected)}" ></div>
+						</button>
+						<ul class="dropdown-menu emoticonWrap" role="menu">
+							<li ng-repeat="earray in emoticon">
+								<div>
+									<span ng-repeat="e in earray" class='emoticon' ng-click="emoticonSelect(e)" ng-style="{'background-position':emoticonSet(e)}"></span>
+								</div>
+							</li>
+						</ul>
 					</div>
 
-					<div class="input-group type">
-						<span class="input-group-addon"><i></i></span> <input
-							type='hidden' class='colorpicker' ng-model="newType.color">
-						<input type="text" class="form-control" placeholder="새로운 유형"
-							ng-model="newType.name"> <span class="input-group-addon"
-							ng-click="addType()">새로운 유형 <span
-							class='glyphicon glyphicon-plus'></span>
-						</span>
-					</div>
 
+					<input class='input-heading' placeholder="오늘은 한마디로!" />
 				</div>
 			</div>
+		</div>
+
+		<div class='container'>
+			<div class='row'>
+				<div class='col-md-8'>
+					<div ng-repeat='type in types'>
+						<div class='panel' ng-style="{'border-color': type.color}">
+							<div class='panel-heading'
+								ng-style="{'color': getTextColor(type.color),'background-color':type.color}">{{type.name}}</div>
+							<ul class="list-group">
+								<li ng-repeat="eachdata in data[type.id]"
+									class="list-group-item" ng-click="toggle(eachdata)">{{eachdata.head}}
+									{{timeString(eachdata.time)}}
+									<div ng-show="eachdata.showbody">{{eachdata.body}}</div>
+								</li>
+								<li class="list-group-item"><a type="button"
+									data-toggle="modal" ng-click="newDone(type)"
+									data-target="#newDone">한일 추가하기 <span
+										class='glyphicon glyphicon-plus'></span></a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
 
 
-			<div class='col-md-4'>
-				<div class='panel panel-primary'>
-					<div class='panel-heading'>나의 하루</div>
-					<div class='panel-body'>
-						<canvas id='pieChart'></canvas>
+				<div class='col-md-4'>
+					<div class='panel panel-primary'>
+						<div class='panel-heading'>나의 하루</div>
+						<div class='panel-body'>
+							<canvas id='pieChart'></canvas>
+						</div>
+						<div class='panel-footer'>
+							<div class="input-group type" ng-repeat="type in types">
+								<span class="input-group-addon"><i></i></span> <input
+									type='hidden' class='colorpicker' ng-model="type.color"
+									value="type.color"> <input type="text"
+									class="form-control" placeholder="한 일"
+									ng-change="updateType(type.id)" ng-model="type.name"
+									value="type.name"><span ng-click="deleteType(type.id)"
+									class="input-group-addon"><span
+									class='glyphicon glyphicon-minus'></span></span>
+							</div>
+
+							<div class="input-group type">
+								<span class="input-group-addon"><i></i></span> <input
+									type='hidden' class='colorpicker' ng-model="newType.color">
+								<input type="text" class="form-control" placeholder="새로운 유형"
+									ng-model="newType.name"> <span
+									class="input-group-addon" ng-click="addType()">새로운 유형 <span
+									class='glyphicon glyphicon-plus'></span>
+								</span>
+							</div>
+
+						</div>
 					</div>
 				</div>
 			</div>
@@ -92,10 +121,10 @@
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
-					<h1>{{content.type.name}}</h1>
+					<h1>{{type.name}}</h1>
 				</div>
 				<div class="modal-body">
-				
+
 					<input type="text" placeholder="한 일" class="form-control"
 						ng-model="content.head">
 

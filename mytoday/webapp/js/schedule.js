@@ -2,18 +2,37 @@
  * angular
  */
 
+var emoticon = [
+    [ [1,7], [74,7], [142,7], [210,7], [280,7] ],
+    [ [1,84], [74,84], [142,84], [210,84], [278,84] ],
+]
+
+
+
 app.controller('TodayDoingController', [
-        '$http',                                	
+		'$http',
 		'$scope',
 		function($http, $scope) {
 
 			controllers.TodayDoingController = $scope;
+			
+			// 이모티콘
+			
+			$scope.emoticonSelected = [1,7];
+			
+			$scope.emoticon = emoticon;
+			
+			$scope.emoticonSelect = function(e){
+				$scope.emoticonSelected = e;
+			}
+			
+			$scope.emoticonSet = function(array){
+				return array[0]+"px " + array[1]+"px"
+			}
 
 			$scope.color = function(type) {
 				return types[index(type)].color;
 			}
-
-			$scope.types = [];
 
 			$scope.newType = {};
 
@@ -21,8 +40,18 @@ app.controller('TodayDoingController', [
 				controllers.inputWindow.setType(type);
 			}
 
-			$scope.addContent = function(data) {
+			$scope.addContent = function(data) { 
 				// 애드 컨텐트
+				if($scope.data[data.type] == undefined)
+					$scope.data[data.type] = [];
+				
+				$scope.data[data.type].push(data);
+
+				pieChart.addData(parseChartData(data), "data");
+				if(pieChart.types == undefined)
+					pieChart.types = [];
+				pieChart.types[pieChart.types.length] = data.type;	
+
 			}
 
 			$scope.getTextColor = function(bgColor) {
@@ -49,8 +78,31 @@ app.controller('TodayDoingController', [
 				};
 			}
 
-			$scope.addType = function() {
+			$scope.typesTimer = {};
+			
+			$scope.updateType = updateType;
 
+			$scope.deleteType = function(id) {
+
+				if ($('#userId').val() != undefined) {
+					if (!confirm("해당 유형과 포함된 스케줄이 모두 삭제됩니다."))
+						return;
+					$http(postRequest('/type/delete.my', {
+						id : id
+					})).success(function(result) {
+						if (result.success) {
+							delete $scope.types[id];
+						} else {
+							warring("저장 오류" + result.error);
+						}
+					})
+					return;
+				}
+			}
+
+			$scope.addType = function() {
+				if ($scope.newType.color == undefined)
+					$scope.newType.color = "#000000";
 				if ($('#userId').val() != undefined) {
 					$http(postRequest('/type/insert.my', {
 						type : JSON.stringify($scope.newType)
@@ -65,10 +117,10 @@ app.controller('TodayDoingController', [
 				}
 
 				function add(id) {
+					$scope.data[id] = [];
 					$scope.newType.id = id;
-					$scope.types.push($scope.newType);
+					$scope.types[id] = ($scope.newType);
 					var color = $scope.newType.color;
-					var index = $scope.types.length - 1;
 					$scope.newType = {};
 					setTimeout(function() {
 						$('.type:not(.colorpicker-element)').colorpicker({
@@ -76,18 +128,19 @@ app.controller('TodayDoingController', [
 							'component' : 'i',
 							'color' : color
 						}).on('changeColor', function(ev) {
-							$scope.types[index].color = ev.color.toHex();
+							$scope.types[id].color = ev.color.toHex();
 							$scope.$apply();
+							updateType(id);
 						});
 					}, 100);
 				}
 			};
 
 			$scope.toggle = function(data) {
-				if (data)
-					data = false;
+				if (data.showbody)
+					data.showbody = false;
 				else
-					data = true;
+					data.showbody = true;
 			}
 
 			$scope.margin = function(value) {
@@ -127,7 +180,7 @@ app.controller('inputWindow', [ '$http', '$scope', function($http, $scope) {
 	}
 
 	$scope.setType = function(type) {
-		$scope.content.type = type;
+		$scope.type = type;
 	}
 
 	$scope.reset();
@@ -140,11 +193,11 @@ app.controller('inputWindow', [ '$http', '$scope', function($http, $scope) {
 
 		$scope.content.date = controllers.TodayDoingController.date;
 
+		$scope.content.type = $scope.type.id;
+
 		controllers.TodayDoingController.addContent($scope.content);
 
 		$('#newDone').modal('hide');
-
-		pieChart.addData(parseChartData($scope.content));
 
 		if ($scope.content.userId != undefined) {
 			$http(postRequest('/schedule/insert.my', {
@@ -164,8 +217,39 @@ app.controller('inputWindow', [ '$http', '$scope', function($http, $scope) {
 	}
 } ]);
 
+function updateType(id) {
+	for(var i =0 ;i<pieChart.types.length;i++)
+		if(pieChart.types[i] == id){
+			pieChart.segments[i].fillColor = controllers.TodayDoingController.types[id].color;
+			pieChart.segments[i].highlightColor = ColorLuminance(controllers.TodayDoingController.types[id].color, 0.2);
+		}
+	pieChart.update();
+	clearTimeout(controllers.TodayDoingController.typesTimer[id]);
+	controllers.TodayDoingController.typesTimer[id] = setTimeout(function() {
+		$.ajax({
+			url : "/type/update.my",
+			type : "POST",
+			data : {
+				type : JSON.stringify(controllers.TodayDoingController.types[id])
+			}
+		}).done(function(result) {
+			if (result.success) {
+			} else {
+				warring("저장 오류" + result.error);
+			}
+		});
+	}, 3000);
+}
+
 function parseChartData(data) {
-	var result = types[data.type];
+	if(controllers.TodayDoingController.types == undefined)
+		setTimeout(function(){parseChartData(data)}, 500);
+	var result = {};
+	var type = controllers.TodayDoingController.types[data.type];
+
+	result.highlight = ColorLuminance(type.color, 0.3);
+	result.color = type.color;
+	result.name = type.name;
 	result.value = data.time;
 	result.label = data.head;
 	return result;
@@ -190,6 +274,26 @@ function time(fity) {
 	return parseInt(fity / 4);
 }
 
+function ColorLuminance(hex, lum) {
+
+	// validate hex string
+	hex = String(hex).replace(/[^0-9a-f]/gi, '');
+	if (hex.length < 6) {
+		hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+	}
+	lum = lum || 0;
+
+	// convert to decimal and change luminosity
+	var rgb = "#", c, i;
+	for (i = 0; i < 3; i++) {
+		c = parseInt(hex.substr(i * 2, 2), 16);
+		c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+		rgb += ("00" + c).substr(c.length);
+	}
+
+	return rgb;
+}
+
 function minutes(fity) {
 	return (fity % 4) * 15;
 }
@@ -201,18 +305,59 @@ function minutes(fity) {
 var pieChart;
 
 var pieChartReset = function() {
+	
+	if(pieChart != undefined){
+	pieChart.destroy();
+	}
 	var ctx = document.getElementById("pieChart").getContext("2d");
 
 	pieChart = new Chart(ctx).Pie([], {
 		tooltipTemplate : "<%if (label){%><%=label%><%}%>"
 	});
-
+	
 	$('#pieChart').css('width', '100%');
 	$('#pieChart').css('height', '100%');
 
 }
 
 $(function() {
+	$.ajax({
+		url : "/type/getlist.my",
+		type : "POST"
+	}).done(function(data) {
+		controllers.TodayDoingController.types = {};
+		if (data == null) {
+			return;
+		}
+
+		for (var i = 0; i < data.length; i++) {
+			if (data[i] == undefined)
+				continue;
+			controllers.TodayDoingController.types[data[i].id] = data[i];
+			controllers.TodayDoingController.$apply();
+			
+			$('.type.ng-scope:last').data("id", data[i].id);
+		}
+		
+		for (var i =0; i< $('.type.ng-scope').length;i++){
+		var each = $('.type.ng-scope:eq('+i+')');
+		var scope = controllers.TodayDoingController;
+		each.colorpicker({'input' : 'input.colorpicker',
+						'component' : 'i',
+						'color' : scope.types[each.data("id")].color
+								}).on('changeColor', function(ev) {
+			controllers.TodayDoingController.types[$(this).data("id")].color = ev.color.toHex();
+			controllers.TodayDoingController.$apply();
+			updateType($(this).data("id"));
+		});
+		}
+		
+		
+		
+
+	});
+	
+	
 
 	$('.type').colorpicker({
 		'input' : 'input.colorpicker',
@@ -250,11 +395,16 @@ $(function() {
 				data = [];
 			controllers.TodayDoingController.dataSetting(data);
 			pieChartReset();
-			toChartData(data);
-
+			
+		 	toChartData(data);
+			
 			function toChartData(data) {
-				for (var i = 0; i < data.length; i++)
-					pieChart.addData(parseChartData(data[i]));
+				for (var i = 0; i < data.length; i++){
+					pieChart.addData(parseChartData(data[i]), "data");
+					if(pieChart.types == undefined)
+						pieChart.types = [];
+					pieChart.types[pieChart.types.length] = data[i].type;
+				}
 			}
 		});
 	});

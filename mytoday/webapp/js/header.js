@@ -21,6 +21,8 @@ function warring(text){
 	}, 4000);
 }
 
+
+
 function postRequest(url, data) {
 	return {
 		method: 'POST',

@@ -38,13 +38,14 @@ CREATE TABLE `schedule` (
 	`id` INTEGER NOT NULL AUTO_INCREMENT,
 	`date` DATE NULL,
 	`userId` VARCHAR(32) NULL,
-	`type` VARCHAR(32) NULL,
+	`type` INTEGER NULL,
 	`time` TINYINT NULL,
 	`startTime` TINYINT NULL,
 	`head` VARCHAR(32) NULL,
 	`body` VARCHAR(2000) NULL,
 	PRIMARY KEY(`id`),
-	FOREIGN KEY (`userId`) REFERENCES `user` (`id`)
+	FOREIGN KEY (`userId`) REFERENCES `user` (`id`),
+	FOREIGN KEY (`type`) REFERENCES `type` (`id`)
 ) ENGINE = InnoDB DEFAULT CHARACTER SET utf8;
 
 

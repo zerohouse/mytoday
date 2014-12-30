@@ -1,9 +1,7 @@
 package mytoday.controller;
 
-
 import mytoday.object.Result;
 import mytoday.object.Schedule;
-import mytoday.object.Type;
 import mytoday.object.User;
 import easyjdbc.dao.DBMethods;
 import easymapping.annotation.Controller;
