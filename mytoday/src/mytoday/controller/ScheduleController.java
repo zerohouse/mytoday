@@ -34,6 +34,16 @@ public class ScheduleController {
 		return new Json(DBMethods.getList(Schedule.class, "userId=? and date=?", user.getId(), http.getParameter("date")));
 	}
 
+	@Post("/schedule/delete.my")
+	public Response delete(Http http) {
+		User user = http.getSessionAttribute(User.class, "user");
+		if (user == null)
+			return null;
+		if (!DBMethods.delete(Schedule.class, "userId=? and id=?", user.getId(), http.getParameter("id")))
+			return new Json(new Result(false, "sqlError"));
+		return new Json(new Result(true, "sqlError"));
+	}
+
 	@Get("/mytoday.my")
 	public Response index(Http http) {
 		User user = http.getSessionAttribute(User.class, "user");

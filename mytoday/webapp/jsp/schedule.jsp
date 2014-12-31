@@ -61,7 +61,7 @@
 							<ul class="list-group">
 								<li ng-repeat="eachdata in data[type.id]"
 									class="list-group-item" ng-click="toggle(eachdata)">{{eachdata.head}}
-									{{timeString(eachdata.time)}}
+									{{timeString(eachdata.time)}} <span class="glyphicon glyphicon-minus pull-right" ng-click="deleteSchedule(eachdata)"></span>
 									<div ng-show="eachdata.showbody">{{eachdata.body}}</div>
 								</li>
 								<li class="list-group-item"><a type="button"

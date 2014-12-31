@@ -16,9 +16,26 @@ app.controller('TodayDoingController', [
 
 			controllers.TodayDoingController = $scope;
 			
-			// 이모티콘
 			
 			
+			$scope.deleteSchedule = function(data){
+				if(!confirm("스케줄을 삭제하시겠습니까?"))
+					return;
+				
+				$http(postRequest('/schedule/delete.my', {
+					id : data.id
+				})).success(function(result) {
+					if (result.success) {
+						var index = $scope.data[data.type].indexOf(data);
+						delete $scope.data[data.type][index];
+						$scope.data[data.type].splice(index, 1);
+					} else {
+						warring("저장 오류" + result.error);
+					}
+				})
+			}
+			
+			// 데이터 헤더
 			$scope.dateheaderReset = function(){
 				$scope.dateheader = {};
 				$scope.dateheader.emoticonSelected = [1,7];
@@ -26,6 +43,7 @@ app.controller('TodayDoingController', [
 			
 			$scope.dateheaderReset();
 			
+			// 이모티콘
 			$scope.emoticon = emoticon;
 			
 			$scope.emoticonSelect = function(e){
@@ -434,7 +452,7 @@ $(function() {
 			pieChartReset();
 			
 		 	toChartData(data);
-			
+			 
 			function toChartData(data) {
 				for (var i = 0; i < data.length; i++){
 					pieChart.addData(parseChartData(data[i]), "data");
