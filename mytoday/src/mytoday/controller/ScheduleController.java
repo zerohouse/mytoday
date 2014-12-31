@@ -27,20 +27,21 @@ public class ScheduleController {
 	}
 
 	@Post("/schedule/getlist.my")
-	public Response getList(Http http){
+	public Response getList(Http http) {
 		User user = http.getSessionAttribute(User.class, "user");
-		if(user==null)
+		if (user == null)
 			return null;
 		return new Json(DBMethods.getList(Schedule.class, "userId=? and date=?", user.getId(), http.getParameter("date")));
 	}
-	
-	@Get("/schedule/index.my")
-	public Response index(Http http){
+
+	@Get("/mytoday.my")
+	public Response index(Http http) {
 		User user = http.getSessionAttribute(User.class, "user");
-		if(user==null)
+		if (user == null) {
+			http.sendRedirect("/");
 			return null;
+		}
 		return new Jsp("schedule.jsp");
 	}
-	
-	
+
 }

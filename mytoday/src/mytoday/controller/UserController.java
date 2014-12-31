@@ -47,7 +47,29 @@ public class UserController {
 
 	@Get("/users/login.my")
 	public Response loginPage(Http http) {
-		return new Jsp("schedule.jsp");
+		return new Jsp("login.jsp");
+	}
+	
+	@Get("/users/modify.my")
+	public Response modify(Http http) {
+		Jsp jsp = new Jsp("modify.jsp");
+		jsp.put("user", http.getSessionAttribute(User.class, "user"));
+		return jsp;
+	}
+	
+	@Post("/users/modify.my")
+	public Response modifyId(Http http) {
+		User user = http.getSessionAttribute(User.class, "user");
+		User usermod = http.getJsonObject(User.class, "user");
+		String oldPassword = http.getParameter("oldPassword");
+		usermod.setPassword(oldPassword);
+		if(!user.isPasswordCorrect(usermod))
+			return new Json(new Result(false, "기존 패스워드가 일치하지 않습니다."));
+		user.update(usermod);
+		if (!DBMethods.update(user)) {
+			return new Json(new Result(false, null));
+		}
+		return new Json(new Result(true, null));
 	}
 
 	@Get("/users/register.my")
@@ -61,6 +83,7 @@ public class UserController {
 		user.setTimestamp(new Date());
 		if (DBMethods.insert(user)) {
 			user.insertDefaultTypes();
+			http.setSessionAttribute("user", user);
 			return new Json(new Result(true, null));
 		}
 		return new Json(new Result(false, null));

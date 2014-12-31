@@ -13,10 +13,19 @@ public class User {
 	private String id;
 	private String password;
 	private String email;
+	private String name;
 	private String nickname;
 	private String gender;
 	private Date timestamp;
 	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public boolean isPasswordCorrect(User userpassed) {
 		return password.equals(userpassed.getPassword());
 	}
@@ -70,7 +79,28 @@ public class User {
 	}
 
 	public void insertDefaultTypes() {
-		DBMethods.insert(new Type(null, id, "공부", "#F7464A"), new Type(null, id, "일", "#46BFBD"), new Type(null, id, "운동", "#FDB45C"), new Type(null, id, "기타", "#949FB1"));
+		DBMethods.insert(new Type(null, id, "공부", "#F7464A"), new Type(null, id, "일", "#46BFBD"), new Type(null, id, "운동", "#FDB45C"), new Type(null,
+				id, "기타", "#949FB1"));
 	}
+
+	public void update(User usermod) {
+		 String password = usermod.getPassword();
+		 String email = usermod.getEmail();
+		 String name = usermod.getName();
+		 String nickname = usermod.getNickname();
+		 String gender = usermod.getGender();
+
+		 if(password!=null)
+			 this.password = password;
+		 if(email!=null)
+			 this.email = email;
+		 if(name!=null)
+			 this.name = name;
+		 if(nickname!=null)
+			 this.nickname = nickname;
+		 if(gender!=null)
+			 this.gender = gender;
+	}
+
 
 }

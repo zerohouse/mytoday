@@ -4,9 +4,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>젊음 - Blues</title>
+<title>Register - Mytoday</title>
 <c:if test="${not empty sessionScope.user}">
-	<c:redirect url="usermodify.jsp" />
+	<c:redirect url="/users/modify.my" />
 </c:if>
 <%@ include file="/components/_css.jspf"%>
 <link href="/css/register.css" rel="stylesheet" media="screen">

@@ -7,6 +7,6 @@
 		<c:redirect url="/users/login.my" />
 	</c:when>
 	<c:otherwise>
-		<c:redirect url="/users/register.my" />
+		<c:redirect url="/mytoday.my" />
 	</c:otherwise>
 </c:choose>

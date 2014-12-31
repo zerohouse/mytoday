@@ -16,6 +16,12 @@
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
 				<li><a href="/mytoday.my">나의 하루</a></li>
+			<!-- 	<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown">커뮤니티 <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="/board/bugreport/">버그제보</a></li>
+						<li><a href="/board/free/">자유게시판</a></li>
+					</ul></li> -->
 
 				<c:choose>
 					<c:when test="${not empty sessionScope.user}">
@@ -25,11 +31,12 @@
 			<form class="navbar-form navbar-right">
 				<a class="btn btn-primary" href="/users/logout.my">로그아웃</a>
 			</form>
+			<script>location.href="/";</script>
 			</c:when>
 			<c:otherwise>
 
 				</ul>
-				<form ng-controller='LoginController' ng-submit="submit()"
+				<form ng-submit="submit()"
 					class="navbar-form navbar-right">
 					<div class="form-group">
 						<input type="text" placeholder="ID" ng-model='user.id'
