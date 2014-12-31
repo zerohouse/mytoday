@@ -304,7 +304,9 @@ function parseChartData(data) {
 		controllers.TodayDoingController.types = {};
 	var type = controllers.TodayDoingController.types[data.type];
 	
-
+	if(type == undefined)
+		return; 
+	
 	result.highlight = ColorLuminance(type.color, 0.3);
 	result.color = type.color;
 	result.name = type.name;
