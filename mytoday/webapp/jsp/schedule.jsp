@@ -9,14 +9,13 @@
 	rel="stylesheet" media="screen">
 <link href="/plugin/bootstrap/colorpicker/bootstrap-colorpicker.css"
 	rel="stylesheet" media="screen">
+<link href="/css/schedule.css" rel="stylesheet" media="screen">
 
 <title>나의 하루.mytoday</title>
 </head>
 <body ng-app='module'>
 	<%@ include file="/components/_header.jspf"%>
-	<br>
-	<br>
-	<br>
+
 
 	<div ng-controller='TodayDoingController'>
 		<div class='container'>

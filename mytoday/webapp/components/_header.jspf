@@ -46,7 +46,7 @@
 							ng-model='user.password' class="form-control">
 					</div>
 					<button type='submit' class="btn btn-primary">로그인</button>
-		<div class="btn btn-info">회원 가입</div>
+		<a class="btn btn-info" href="/users/register.my">회원 가입</a>
 		</form>
 		</c:otherwise>
 		</c:choose>
@@ -56,5 +56,6 @@
 	</div>
 </header>
 
+<br><br><br>
 <div class='loading'></div>
 <div id='warring'></div>

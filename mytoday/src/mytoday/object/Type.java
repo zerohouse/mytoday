@@ -7,15 +7,24 @@ import easyjdbc.annotation.Table;
 public class Type {
 	
 	@Key
-	private int id;
+	private Integer id;
 	private String userId;
 	private String name;
 	private String color;
 	
+	public Type(){
+		
+	}
+	public Type(Integer id, String userId, String name, String color) {
+		this.id = id;
+		this.userId = userId;
+		this.name = name;
+		this.color = color;
+	}
 	public int getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	public String getUserId() {
