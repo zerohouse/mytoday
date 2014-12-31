@@ -16,6 +16,13 @@ public class Schedule {
 	private String userId;
 	private int type;
 	private int time;
+	
+	@Override
+	public String toString() {
+		return "Schedule [id=" + id + ", date=" + date + ", userId=" + userId + ", type=" + type + ", time=" + time + ", startTime=" + startTime
+				+ ", head=" + head + ", body=" + body + "]";
+	}
+
 	private int startTime;
 	private String head;
 	private String body;

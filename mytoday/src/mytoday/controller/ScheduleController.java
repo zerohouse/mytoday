@@ -54,4 +54,10 @@ public class ScheduleController {
 		return new Jsp("schedule.jsp");
 	}
 
+	@Post("/schedule/getbetween.my")
+	public Response between(Http http) {
+		Json json = new Json(DBMethods.getList(Schedule.class, "userId=? and `date` BETWEEN ? AND ?", "zerohouse", "2014-12-30", "2015-01-01"));
+		json.setDateformat("yyyy-MM-dd");
+		return json;
+	}
 }
