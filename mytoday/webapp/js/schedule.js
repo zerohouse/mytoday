@@ -472,7 +472,7 @@ $(function() {
 			}
 		}).done(function(data) {
 			if (data == null){
-				$scope.dateheaderReset();
+				controllers.TodayDoingController.dateheaderReset();
 				return;
 				}
 			controllers.TodayDoingController.dateHeaderSetting(data);
