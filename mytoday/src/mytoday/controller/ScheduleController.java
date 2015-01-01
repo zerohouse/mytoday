@@ -34,6 +34,17 @@ public class ScheduleController {
 		return new Json(DBMethods.getList(Schedule.class, "userId=? and date=?", user.getId(), http.getParameter("date")));
 	}
 
+	@Post("/schedule/update.my")
+	public Response update(Http http) {
+		User user = http.getSessionAttribute(User.class, "user");
+		if (user == null)
+			return null;
+		Schedule schedule = http.getJsonObject(Schedule.class, "schedule");
+		if (!DBMethods.update(schedule))
+			return new Json(new Result(false, "sqlError"));
+		return new Json(new Result(true, null));
+	}
+	
 	@Post("/schedule/delete.my")
 	public Response delete(Http http) {
 		User user = http.getSessionAttribute(User.class, "user");
@@ -41,7 +52,7 @@ public class ScheduleController {
 			return null;
 		if (!DBMethods.delete(Schedule.class, "userId=? and id=?", user.getId(), http.getParameter("id")))
 			return new Json(new Result(false, "sqlError"));
-		return new Json(new Result(true, "sqlError"));
+		return new Json(new Result(true, null));
 	}
 
 	@Get("/mytoday.my")
@@ -56,7 +67,12 @@ public class ScheduleController {
 
 	@Post("/schedule/getbetween.my")
 	public Response between(Http http) {
-		Json json = new Json(DBMethods.getList(Schedule.class, "userId=? and `date` BETWEEN ? AND ?", "zerohouse", "2014-12-30", "2015-01-01"));
+		User user = http.getSessionAttribute(User.class, "user");
+		if (user == null) {
+			return null;
+		}
+		Json json = new Json(DBMethods.getList(Schedule.class, "userId=? and `date` BETWEEN ? AND ?", user.getId(), http.getParameter("dateFrom"),
+				http.getParameter("dateTo")));
 		json.setDateformat("yyyy-MM-dd");
 		return json;
 	}

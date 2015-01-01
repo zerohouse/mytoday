@@ -4,7 +4,7 @@
 	height: 480px
 }
 
-#datepicker {
+.datepicker {
 	font-size: 30px;
 	border: none;
 	border-radius: 10px;
@@ -65,7 +65,6 @@ button {
 
 .daytable li {
 	display: inline-block;
-	list-style: none;
 	background-color: #ccc;
 	height: 400px;
 	position: relative;
@@ -73,8 +72,13 @@ button {
 
 .daytable li div {
 	width: 100%;
-	float: left;
-	background-color: #aaa;
-	position: relative;
-	list-style: none;
+	position: absolute;
+}
+
+.days-header{
+	position:absolute;
+	margin: auto;
+	text-align: center;
+	width: 100%;
+}
 }

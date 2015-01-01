@@ -20,9 +20,15 @@
 	<div ng-controller='TableController' ng-init="setDraggable()">
 		<div class='container'>
 			<div class='row'>
-				<div class='col-md=5 col-md-offset-1'>
+				<div class='col-md-5 col-md-offset-1'>
 					<span class="glyphicon glyphicon-chevron-left big-icon"></span> <input
-						id='datepicker' ng-model="date" type="text"> <span
+						class='datepicker' ng-model="dateFrom" type="text"> <span
+						class="glyphicon glyphicon-chevron-right big-icon"></span>
+
+				</div>
+				<div class='col-md-5'>
+					<span class="glyphicon glyphicon-chevron-left big-icon"></span> <input
+						class='datepicker' ng-model="dateTo" type="text"> <span
 						class="glyphicon glyphicon-chevron-right big-icon"></span>
 				</div>
 			</div>
@@ -33,9 +39,19 @@
 		<div class='container'>
 			<div class='row'>
 				<ul class='daytable'>
-					<li ng-repeat="day in days" ng-drop='true' ng-style="{width:dayWidth()}">
+					<li ng-repeat="(key, day) in days" ng-drop='true'
+						ng-style="{height:tableHeight, width:dayWidth()}">
+						<span class="days-header">
+							<h3>{{key}}</h3>
+						</span>
+						<hr ng-repeat="time in times" style="margin-top:0" ng-style="{marginBottom:gridpx}"/>
+
 						<div ng-repeat="schedule in day"
-							ng-style="{top:scheduleTop(schedule), height:scheduleHeight(schedule)}"></div>
+							ng-style="{top:scheduleTop(schedule), height:scheduleHeight(schedule), backgroundColor:backColor(schedule)}">
+							<p class='lead'>
+								<strong>{{schedule.head}}</strong> {{schedule.body}}
+							</p>
+						</div>
 
 
 					</li>
