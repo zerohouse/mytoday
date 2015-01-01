@@ -66,24 +66,23 @@ button {
 .daytable li {
 	display: inline-block;
 	position: relative;
-	margin:0px 1%;
+	margin: 0px 1%;
 }
 
 .daytable li div {
 	width: 100%;
 	position: absolute;
-	border-radius:10px;
-	text-align:center;
+	border-radius: 10px;
+	text-align: center;
 }
 
-.days-header{
-	position:absolute;
+.days-header {
+	position: absolute;
 	margin: auto;
 	text-align: center;
 	width: 100%;
 }
 
-hr{
-background-color: #eee;
-border-top: 1px dotted #eee;
+hr {
+	border-top: 1px dotted #eee;
 }

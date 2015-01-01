@@ -93,5 +93,5 @@ app.controller('registerController', [ '$http', '$scope',
 					return true;
 				}
 			}
-
+			loading.end();
 		} ]);

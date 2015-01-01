@@ -2,7 +2,7 @@
  * 
  */
 
-var app = angular.module('module', ['ngDraggable']);
+var app = angular.module('module', []);
 
 
 var controllers = {};
@@ -53,5 +53,14 @@ app.controller('LoginController', ['$http','$scope' , function($http, $scope) {
 			}
 		});
 	}
+	
 }]);
+
+var loading = {};
+loading.start = function(){
+	$('.loading').show('fade',500)
+	};
+loading.end = function(){
+	$('.loading').hide('fade',500);
+	};
 

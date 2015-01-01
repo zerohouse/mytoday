@@ -237,6 +237,7 @@ app.controller('inputWindow', [ '$http', '$scope', function($http, $scope) {
 	$scope.reset = function() {
 		$scope.content = {
 			time : 4,
+			startTime : 40,
 			userId : $('#userId').val()
 		};
 	}
@@ -333,8 +334,8 @@ function index(type) {
 	}
 }
 
-function timeString(value) {
-	var result = time(value) + "시간";
+function timeString(value, suffix) {
+	var result = time(value) + suffix;
 	var min = minutes(value);
 	if (min != 0)
 		result += " " + minutes(value) + "분";
@@ -452,6 +453,7 @@ $(function() {
 		format : "yyyy-mm-dd",
 		autoclose : true
 	}).on('changeDate', function(e) {
+		loading.start();
 		clearTimeout(controllers.TodayDoingController.dateHeaderTimer);
 		$.ajax({
 			url : "/schedule/getlist.my",
@@ -466,6 +468,7 @@ $(function() {
 			pieChartReset();
 			
 		 	toChartData(data);
+		 	loading.end();
 			 
 			function toChartData(data) {
 				for (var i = 0; i < data.length; i++){
@@ -488,18 +491,30 @@ $(function() {
 				return;
 				}
 			controllers.TodayDoingController.dateHeaderSetting(data);
+			loading.end();
 		});
 	});
 
 	datepicker.datepicker('setDate', new Date());
 
-	$("#times").slider({
+	$(".times:eq(0)").slider({
 		range : "min",
 		value : 4,
 		min : 1,
 		max : 48,
 		slide : function(event, ui) {
 			controllers.inputWindow.content.time = ui.value;
+			controllers.inputWindow.$apply();
+		}
+	});
+	
+	$(".times:eq(1)").slider({
+		range : "min",
+		value : 4,
+		min : 1,
+		max : 96,
+		slide : function(event, ui) {
+			controllers.inputWindow.content.startTime = ui.value;
 			controllers.inputWindow.$apply();
 		}
 	});

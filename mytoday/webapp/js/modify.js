@@ -95,4 +95,5 @@ app.controller('registerController', [
 				}
 			}
 
+			loading.end();
 		} ]);

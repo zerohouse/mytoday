@@ -1,9 +1,8 @@
 @CHARSET "UTF-8";
 
 .margin-auto {
-	margin:auto;
+	margin: auto;
 }
-
 
 .top-buffer {
 	margin-top: 20px;
@@ -37,17 +36,36 @@
 	display: none;
 }
 
-.red{
-	color:red
+.red {
+	color: red
 }
 
-.green{
-	color:green
+.green {
+	color: green
 }
 
-
-.bigger-icon{
-	font-size:30px;
-	margin-top:5px;
+.bigger-icon {
+	font-size: 30px;
+	margin-top: 5px;
 }
 
+.loading {
+	display: block;
+	background-size: 300px;
+	background-repeat: no-repeat;
+	background-position: center;
+	height: 300px;
+	z-index: 100;
+	position: fixed;
+	position: fixed;
+	width: 100%;
+	margin: auto;
+	margin-top: 10%;
+	position: fixed;
+	background-position: center;
+	background-image: url('../img/loading.gif');
+}
+
+.pointer {
+	cursor: pointer;
+}

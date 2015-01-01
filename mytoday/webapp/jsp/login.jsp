@@ -36,5 +36,6 @@
 		</div>
 	</div>
 	<%@ include file="/components/_imports.jspf"%>
+	<script>loading.end();</script>
 </body>
 </html>

@@ -21,9 +21,9 @@
 		<div class='container'>
 			<div class='row'>
 				<div class='col-md-5 col-md-offset-1'>
-					<span class="glyphicon glyphicon-chevron-left big-icon"></span> <input
+					<span class="glyphicon glyphicon-chevron-left big-icon pointer"></span> <input
 						id='datepicker' ng-model="date" type="text"> <span
-						class="glyphicon glyphicon-chevron-right big-icon"></span>
+						class="glyphicon glyphicon-chevron-right big-icon pointer"></span>
 				</div>
 				<div class='col-md-2 pull-right'>
 					<span ng-show="!saved" class="glyphicon glyphicon-refresh bigger-icon red"></span>
@@ -64,11 +64,11 @@
 								ng-style="{'color': getTextColor(type.color),'background-color':type.color}">{{type.name}}</div>
 							<ul class="list-group">
 								<li ng-repeat="eachdata in data[type.id]"
-									class="list-group-item" ng-click="toggle(eachdata)">{{eachdata.head}}
-									{{timeString(eachdata.time)}} <span class="glyphicon glyphicon-minus pull-right" ng-click="deleteSchedule(eachdata)"></span>
+									class="list-group-item" class='pointer' ng-click="toggle(eachdata)">{{eachdata.head}}
+									{{timeString(eachdata.time, "시간")}} <span class="glyphicon glyphicon-minus pull-right pointer" ng-click="deleteSchedule(eachdata)"></span>
 									<div ng-show="eachdata.showbody">{{eachdata.body}}</div>
 								</li>
-								<li class="list-group-item"><a type="button"
+								<li class="list-group-item" class='pointer'><a type="button"
 									data-toggle="modal" ng-click="newDone(type)"
 									data-target="#newDone">추가하기 <span
 										class='glyphicon glyphicon-plus'></span></a></li>
@@ -92,7 +92,7 @@
 									ng-change="updateType(type.id)" ng-model="type.name"
 									value="type.name"><span ng-click="deleteType(type.id)"
 									class="input-group-addon"><span
-									class='glyphicon glyphicon-minus'></span></span>
+									class='glyphicon glyphicon-minus pointer'></span></span>
 							</div>
 
 							<div class="input-group type">
@@ -100,7 +100,7 @@
 									type='hidden' class='colorpicker' ng-model="newType.color">
 								<input type="text" class="form-control" placeholder="새로운 유형"
 									ng-model="newType.name"> <span
-									class="input-group-addon" ng-click="addType()">새로운 유형 <span
+									class="input-group-addon pointer" ng-click="addType()">새로운 유형 <span
 									class='glyphicon glyphicon-plus'></span>
 								</span>
 							</div>
@@ -132,9 +132,16 @@
 
 					<div class="form-group">
 						<label for="recipient-name" class="control-label">몇시간 했나요?
-							<mark> <span class='font-big' id='timesvalue'>{{timeString(content.time)}}</span></mark>
+							<mark> <span class='font-big'>{{timeString(content.time, "시간")}}</span></mark>
 						</label>
-						<div id='times'></div>
+						<div class='times'></div>
+					</div>
+					
+					<div class="form-group">
+						<label for="recipient-name" class="control-label">몇시부터 했나요?
+							<mark> <span class='font-big'>{{timeString(content.startTime, "시")}}</span></mark>
+						</label>
+						<div class='times'></div>
 					</div>
 
 					<div class="form-group">

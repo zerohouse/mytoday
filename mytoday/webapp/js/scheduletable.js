@@ -10,6 +10,8 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 	
 	$scope.days = {};
 	
+	
+	
 	$scope.daysLength = 0;
 	
 	var gridpx = 7;
@@ -22,7 +24,6 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 	for(var i=0; i<96; i++)
 		$scope.times.push(i);
 		
-	$scope.scheduleUpdateTimer;
 	
 	$scope.setDraggable = function (){
 		$('.daytable li div').draggable({containment: "parent", axis: "y" , grid : [gridpx,gridpx], 
@@ -37,8 +38,6 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 			angular.element($(this)).data().$scope.schedule.timeHelper = false;
 			angular.element($(this)).data().$scope.schedule.startTime += (ui.position.top - ui.originalPosition.top) / gridpx;
 			var schedule = angular.element($(this)).data().$scope.schedule;
-			clearTimeout($scope.scheduleUpdateTimer);
-		    $scope.scheduleUpdateTimer = setTimeout(function(){
 		    $http(postRequest('/schedule/update.my', {
 				schedule : JSON.stringify(schedule)
 			})).success(function(result) {
@@ -48,10 +47,97 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 					warring("저장 오류" + result.error);
 				}
 			});    
-		    }, 3000);
 		}});
 	}
 
+	$scope.toChart = function(){
+		if(lineChart != undefined)
+			return;
+		loading.start();
+			
+		try{
+			var	typekeys = Object.keys($scope.types);
+		} catch (e) {
+			setTimeout(function(){
+				$scope.toChart();
+			},300);
+			return;
+		}
+		
+		if(typekeys==undefined){
+			setTimeout(function(){
+				$scope.toChart();
+			},300);
+			return;
+		}
+		
+		var keys = Object.keys($scope.days);
+		var datasets = [];
+		var datasetMap = {};
+		
+		
+		if(keys==undefined || keys.length ==0){
+			setTimeout(function(){
+				console.log(1);
+				$scope.toChart();
+			},300);
+			return;
+		}
+		
+		for(var i=0; i<typekeys.length; i++){
+			var color = $scope.types[typekeys[i]].color;
+			datasetMap[typekeys[i]] = {
+				label : $scope.types[typekeys[i]].name,
+				pointStrokeColor: "#fff",
+			    pointHighlightFill: "#fff",
+				fillColor : hexToRgba(color, 0.2),
+				strokeColor : hexToRgba(color, 1),
+				pointColor : hexToRgba(color, 1),
+				pointHighlightStroke : hexToRgba(color, 1),
+				data : []
+			}
+			for(var j=0; j<keys.length; j++){
+				datasetMap[typekeys[i]].data.push(0);
+			}
+		}
+		
+		var j = 0;
+		for(var key in $scope.days){
+			var data = $scope.days[key];
+			for(var i=0; i<data.length; i++){
+				datasetMap[data[i].type].data[j] += data[i].time;
+			}
+			j++;
+		}
+		
+		for(var i=0; i<typekeys.length; i++){
+			datasets.push(datasetMap[typekeys[i]]);
+		}
+		
+		
+		var data = {
+			    labels:  keys,
+			    datasets: datasets
+			};
+		
+		var options = {  
+				tooltipTemplate: "<%=label%>: <%= value %>",
+			    multiTooltipTemplate: "<%=datasetLabel%>: <%= value/4 %>시간"
+			    	};
+		
+
+		
+		var ctx = document.getElementById("chart").getContext("2d");
+
+		var lineChart = new Chart(ctx).Line(data,options);
+		
+		setTimeout(function(){
+			$('#chart').width($('.modal-body').width());
+			$('#chart').height($('.modal-body').width()*2/3);
+		},200);
+		loading.end();
+	}
+	
 	$scope.dayWidth = function() {
 		return (100 - $scope.daysLength*2) / $scope.daysLength + "%";
 	}
@@ -144,6 +230,9 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 		format : "yyyy-mm-dd",
 		autoclose : true
 	}).on('changeDate', function(e) {
+		if(lineChart !=undefined)
+			lineChart.destroy();
+		loading.start();
 		clearTimeout(dateUpdateTimer)
 		dateUpdateTimer = setTimeout(function(){
 			var date1 = datepicker1.datepicker('getDate');
@@ -156,14 +245,21 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 				dateTo : datepicker2.val()
 			})).success(function(data) {
 				$scope.setData(data);
+				loading.end();
 			});
 		}, 2000);
 	});
+	
+	
+	var lineChart;
 	
 	datepicker2.datepicker({
 		format : "yyyy-mm-dd",
 		autoclose : true
 	}).on('changeDate', function(e) {
+		loading.start();
+		if(lineChart !=undefined)
+			lineChart.destroy();
 		var date1 = datepicker1.datepicker('getDate');
 		var date2 = datepicker2.datepicker('getDate');
 		if(date1 > date2)
@@ -174,6 +270,7 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 			dateTo : datepicker2.val()
 		})).success(function(data) {
 			$scope.setData(data);
+			loading.end();
 		});
 	});
 	
@@ -191,6 +288,14 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 	}
 	
 }]);
+
+function hexToRgba(hex, alpha){
+	var rgb = hexToRgb(hex);
+	return "rgba(" + rgb.r + ","+rgb.g + ","+rgb.b + "," + alpha +")";
+}
+
+
+
 function hexToRgb(hex) {
 	// Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
 	var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
@@ -224,5 +329,6 @@ $(function() {
 			var rgb = hexToRgb(controllers.TableController.types[schedule.type].color);
 			return "rgba(" + rgb.r + ","+rgb.g + ","+rgb.b + "," + 0.5 +")";
 		}
+		loading.end();
 	});
 });

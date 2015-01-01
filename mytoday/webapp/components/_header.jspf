@@ -51,5 +51,5 @@
 </header>
 
 <br><br><br>
-<div class='loading'></div>
+<span class='loading'></span>
 <div id='warring'></div>
