@@ -16,12 +16,12 @@ app.controller('TodayDoingController', [
 
 			controllers.TodayDoingController = $scope;
 			
-			
+			controllers.TodayDoingController.saved = true;
 			
 			$scope.deleteSchedule = function(data){
 				if(!confirm("스케줄을 삭제하시겠습니까?"))
 					return;
-				
+				controllers.TodayDoingController.saved  = false;
 				$http(postRequest('/schedule/delete.my', {
 					id : data.id
 				})).success(function(result) {
@@ -29,6 +29,7 @@ app.controller('TodayDoingController', [
 						var index = $scope.data[data.type].indexOf(data);
 						delete $scope.data[data.type][index];
 						$scope.data[data.type].splice(index, 1);
+						controllers.TodayDoingController.saved  = true; controllers.TodayDoingController.$apply();
 					} else {
 						warring("저장 오류" + result.error);
 					}
@@ -56,6 +57,7 @@ app.controller('TodayDoingController', [
 			}
 			
 			$scope.dateHeaderUpdate = function(){
+				controllers.TodayDoingController.saved  = false;
 				clearTimeout($scope.dateHeaderTimer);
 				$scope.dateHeaderTimer = setTimeout(function() {
 					var dateheader = {};
@@ -70,6 +72,7 @@ app.controller('TodayDoingController', [
 						}
 					}).done(function(result) {
 						if (result.success) {
+							controllers.TodayDoingController.saved  = true; controllers.TodayDoingController.$apply();
 						} else {
 							warring("저장 오류" + result.error);
 						}
@@ -140,13 +143,15 @@ app.controller('TodayDoingController', [
 			$scope.deleteType = function(id) {
 
 				if ($('#userId').val() != undefined) {
-					if (!confirm("해당 유형과 포함된 스케줄이 모두 삭제됩니다."))
-						return;
+					if (!confirm("해당 유형과 포함된 스케줄이 모두 삭제됩니다.")){
+						controllers.TodayDoingController.saved  = false;
+						return;}
 					$http(postRequest('/type/delete.my', {
 						id : id
 					})).success(function(result) {
 						if (result.success) {
 							delete $scope.types[id];
+							controllers.TodayDoingController.saved  = true; controllers.TodayDoingController.$apply();
 						} else {
 							warring("저장 오류" + result.error);
 						}
@@ -159,11 +164,13 @@ app.controller('TodayDoingController', [
 				if ($scope.newType.color == undefined)
 					$scope.newType.color = "#000000";
 				if ($('#userId').val() != undefined) {
+					controllers.TodayDoingController.saved  = false;
 					$http(postRequest('/type/insert.my', {
 						type : JSON.stringify($scope.newType)
 					})).success(function(result) {
 						if (result.success) {
 							add(result.error);
+							controllers.TodayDoingController.saved  = true; controllers.TodayDoingController.$apply();
 						} else {
 							warring("저장 오류" + result.error);
 						}
@@ -255,11 +262,13 @@ app.controller('inputWindow', [ '$http', '$scope', function($http, $scope) {
 		$('#newDone').modal('hide');
 
 		if ($scope.content.userId != undefined) {
+			controllers.TodayDoingController.saved  = false;
 			$http(postRequest('/schedule/insert.my', {
 				schedule : JSON.stringify($scope.content)
 			})).success(function(result) {
 				if (result.success) {
 					$scope.reset();
+					controllers.TodayDoingController.saved  = true; controllers.TodayDoingController.$apply();
 				} else {
 					warring("저장 오류" + result.error);
 				}
@@ -279,6 +288,7 @@ function updateType(id) {
 			pieChart.segments[i].highlightColor = ColorLuminance(controllers.TodayDoingController.types[id].color, 0.2);
 		}
 	pieChart.update();
+	controllers.TodayDoingController.saved  = false;
 	clearTimeout(controllers.TodayDoingController.typesTimer[id]);
 	controllers.TodayDoingController.typesTimer[id] = setTimeout(function() {
 		$.ajax({
@@ -289,6 +299,7 @@ function updateType(id) {
 			}
 		}).done(function(result) {
 			if (result.success) {
+				controllers.TodayDoingController.saved  = true; controllers.TodayDoingController.$apply();
 			} else {
 				warring("저장 오류" + result.error);
 			}
@@ -334,6 +345,10 @@ function time(fity) {
 	return parseInt(fity / 4);
 }
 
+function minutes(fity) {
+	return (fity % 4) * 15;
+}
+
 function ColorLuminance(hex, lum) {
 
 	// validate hex string
@@ -354,9 +369,6 @@ function ColorLuminance(hex, lum) {
 	return rgb;
 }
 
-function minutes(fity) {
-	return (fity % 4) * 15;
-}
 
 /**
  * jquery

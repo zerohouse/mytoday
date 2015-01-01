@@ -6,6 +6,8 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 
 	controllers.TableController = $scope;
 	
+	$scope.saved = true;
+	
 	$scope.days = {};
 	
 	$scope.daysLength = 0;
@@ -23,14 +25,25 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 	$scope.scheduleUpdateTimer;
 	
 	$scope.setDraggable = function (){
-		$('.daytable li div').draggable({containment: "parent", axis: "y" , grid : [gridpx,gridpx], stop : function(event, ui){
-		    angular.element($(this)).data().$scope.schedule.startTime += (ui.position.top - ui.originalPosition.top) / gridpx;
-		    clearTimeout($scope.scheduleUpdateTimer);
+		$('.daytable li div').draggable({containment: "parent", axis: "y" , grid : [gridpx,gridpx], 
+			drag : function(even, ui){
+				$scope.saved = false;
+				var time = angular.element($(this)).data().$scope.schedule.startTime + (ui.position.top - ui.originalPosition.top) / gridpx;
+				angular.element($(this)).data().$scope.schedule.timeHelper = true;
+				$scope.timeHelper = timeString(time);
+				$scope.$apply();
+			},
+			stop : function(event, ui){
+			angular.element($(this)).data().$scope.schedule.timeHelper = false;
+			angular.element($(this)).data().$scope.schedule.startTime += (ui.position.top - ui.originalPosition.top) / gridpx;
+			var schedule = angular.element($(this)).data().$scope.schedule;
+			clearTimeout($scope.scheduleUpdateTimer);
 		    $scope.scheduleUpdateTimer = setTimeout(function(){
 		    $http(postRequest('/schedule/update.my', {
-				schedule : JSON.stringify(angular.element($(this)).data().$scope.schedule)
+				schedule : JSON.stringify(schedule)
 			})).success(function(result) {
 				if (result.success) {
+					$scope.saved = true;
 				} else {
 					warring("저장 오류" + result.error);
 				}
@@ -40,7 +53,7 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 	}
 
 	$scope.dayWidth = function() {
-		return 100 / $scope.daysLength + "%";
+		return (100 - $scope.daysLength*2) / $scope.daysLength + "%";
 	}
 	
 	$scope.scheduleHeight = function(schedule) {
@@ -51,11 +64,40 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 		return schedule.startTime * gridpx + "px";;
 	}
 	
+	$scope.startTime = function (schedule){
+		return timeString(schedule.startTime);
+	}
+	
+	
+	
+	function timeString(value) {
+		var result = time(value) + "시";
+		var min = minutes(value);
+		if (min != 0)
+			result += " " + minutes(value) + "분";
+		return result;
+	}
+
+	function time(fity) {
+		return parseInt(fity / 4);
+	}
+
+	function minutes(fity) {
+		return (fity % 4) * 15;
+	}
+
+	$scope.timeString = timeString;
+	
 	$scope.setData = function (data){
-		$scope.days = {};
+		$scope.days = {"스케줄 없음":[]};
 		$scope.daysLength =0;
-		if(data==null)
+		if(data=="null"){
+			$scope.daysLength =1;
 			return;
+			}
+		if(data==undefined)
+			return;
+		delete $scope.days["스케줄 없음"];
 		for(var i=0;i<data.length;i++){
 			if($scope.days[data[i].date] == undefined){
 				$scope.days[data[i].date] = [];
@@ -137,13 +179,15 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 	
 	
 	$timeout(function(){
-	datepicker1.datepicker('setDate', new Date());
-	datepicker2.datepicker('setDate', new Date());
+		var setDate = new Date();
+		setDate.setDate(setDate.getDate()-7);
+		datepicker1.datepicker('setDate', setDate);
+		datepicker2.datepicker('setDate', new Date());
 	});
 	
-	$scope.backColor = function(schedule){
+	$scope.backColor = function(schedule, opacity){
 			var rgb = hexToRgb("#555555");
-		return "rgba(" + rgb.r + ","+rgb.g + ","+rgb.b + "," + 0.5 +")";
+		return "rgba(" + rgb.r + ","+rgb.g + ","+rgb.b + "," + opacity +")";
 	}
 	
 }]);

@@ -20,10 +20,14 @@
 	<div ng-controller='TodayDoingController'>
 		<div class='container'>
 			<div class='row'>
-				<div class='col-md=5 col-md-offset-1'>
+				<div class='col-md-5 col-md-offset-1'>
 					<span class="glyphicon glyphicon-chevron-left big-icon"></span> <input
 						id='datepicker' ng-model="date" type="text"> <span
 						class="glyphicon glyphicon-chevron-right big-icon"></span>
+				</div>
+				<div class='col-md-2 pull-right'>
+					<span ng-show="!saved" class="glyphicon glyphicon-refresh bigger-icon red"></span>
+					<span ng-show="saved" class="glyphicon glyphicon-ok bigger-icon green"></span>
 				</div>
 			</div>
 		</div>

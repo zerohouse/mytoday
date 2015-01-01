@@ -65,14 +65,15 @@ button {
 
 .daytable li {
 	display: inline-block;
-	background-color: #ccc;
-	height: 400px;
 	position: relative;
+	margin:0px 1%;
 }
 
 .daytable li div {
 	width: 100%;
 	position: absolute;
+	border-radius:10px;
+	text-align:center;
 }
 
 .days-header{
@@ -81,4 +82,8 @@ button {
 	text-align: center;
 	width: 100%;
 }
+
+hr{
+background-color: #eee;
+border-top: 1px dotted #eee;
 }

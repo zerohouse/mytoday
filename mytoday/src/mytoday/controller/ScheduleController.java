@@ -64,6 +64,16 @@ public class ScheduleController {
 		}
 		return new Jsp("schedule.jsp");
 	}
+	
+	@Get("/myweek.my")
+	public Response myweek(Http http) {
+		User user = http.getSessionAttribute(User.class, "user");
+		if (user == null) {
+			http.sendRedirect("/");
+			return null;
+		}
+		return new Jsp("scheduletable.jsp");
+	}
 
 	@Post("/schedule/getbetween.my")
 	public Response between(Http http) {

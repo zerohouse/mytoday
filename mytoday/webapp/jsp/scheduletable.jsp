@@ -20,16 +20,19 @@
 	<div ng-controller='TableController' ng-init="setDraggable()">
 		<div class='container'>
 			<div class='row'>
-				<div class='col-md-5 col-md-offset-1'>
+				<div class='col-md-4 col-md-offset-1'>
 					<span class="glyphicon glyphicon-chevron-left big-icon"></span> <input
 						class='datepicker' ng-model="dateFrom" type="text"> <span
 						class="glyphicon glyphicon-chevron-right big-icon"></span>
-
 				</div>
-				<div class='col-md-5'>
+				<div class='col-md-4'>
 					<span class="glyphicon glyphicon-chevron-left big-icon"></span> <input
 						class='datepicker' ng-model="dateTo" type="text"> <span
 						class="glyphicon glyphicon-chevron-right big-icon"></span>
+				</div>
+				<div class='col-md-2 pull-right'>
+					<span ng-show="!saved" class="glyphicon glyphicon-refresh bigger-icon red"></span>
+					<span ng-show="saved" class="glyphicon glyphicon-ok bigger-icon green"></span>
 				</div>
 			</div>
 		</div>
@@ -47,9 +50,9 @@
 						<hr ng-repeat="time in times" style="margin-top:0" ng-style="{marginBottom:gridpx}"/>
 
 						<div ng-repeat="schedule in day"
-							ng-style="{top:scheduleTop(schedule), height:scheduleHeight(schedule), backgroundColor:backColor(schedule)}">
+							ng-style="{top:scheduleTop(schedule), height:scheduleHeight(schedule), backgroundColor:backColor(schedule, 0.5), borderColor:backColor(schedule)}">
 							<p class='lead'>
-								<strong>{{schedule.head}}</strong> {{schedule.body}}
+								<strong>{{schedule.head}}</strong> <span class='draghelper'></span><small ng-show="schedule.timeHelper">{{timeHelper}}부터</small><small ng-show="!schedule.timeHelper">{{timeString(schedule.startTime)}}부터</small> {{schedule.body}}
 							</p>
 						</div>
 

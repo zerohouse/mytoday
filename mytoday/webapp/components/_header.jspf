@@ -16,7 +16,7 @@
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
 				<li><a href="/mytoday.my">나의 하루</a></li>
-
+				<li><a href="/myweek.my">나의 일주일</a></li>
 				<c:choose>
 					<c:when test="${not empty sessionScope.user}">
 						<input type=hidden id="userId" value="${user.id}">
