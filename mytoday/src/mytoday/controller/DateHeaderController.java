@@ -3,7 +3,7 @@ package mytoday.controller;
 import mytoday.object.DateHeader;
 import mytoday.object.Result;
 import mytoday.object.User;
-import easyjdbc.dao.DBMethods;
+import easyjdbc.query.QueryExecuter;
 import easymapping.annotation.Controller;
 import easymapping.annotation.Post;
 import easymapping.mapping.Http;
@@ -18,8 +18,10 @@ public class DateHeaderController {
 		User user = http.getSessionAttribute(User.class, "user");
 		if (user == null)
 			return null;
-		
-		return new Json(DBMethods.get(DateHeader.class, http.getParameter("date"),  user.getId()));
+		QueryExecuter qe = new QueryExecuter();
+		DateHeader dateheader = qe.get(DateHeader.class, http.getParameter("date"),  user.getId());
+		qe.close();
+		return new Json(dateheader);
 	}
 	
 
@@ -28,9 +30,11 @@ public class DateHeaderController {
 		User user = http.getSessionAttribute(User.class, "user");
 		if (user == null)
 			return null;
+		QueryExecuter qe = new QueryExecuter();
 		DateHeader dateheader = http.getJsonObject(DateHeader.class, "dateheader");
 		dateheader.setUserId(user.getId());
-		DBMethods.insertIfExistUpdate(dateheader);
+		qe.insertIfExistUpdate(dateheader);
+		qe.close();
 		return new Json(new Result(true, null));
 	}
 }

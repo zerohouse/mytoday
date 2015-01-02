@@ -5,7 +5,7 @@ import java.util.Date;
 
 import mytoday.object.Result;
 import mytoday.object.User;
-import easyjdbc.dao.DBMethods;
+import easyjdbc.query.QueryExecuter;
 import easymapping.annotation.Controller;
 import easymapping.annotation.Get;
 import easymapping.annotation.Post;
@@ -26,17 +26,22 @@ public class UserController {
 	@Post("/users/checkid.my")
 	public Response checkId(Http http) {
 		String id = http.getParameter("id");
-		if (null == DBMethods.get(User.class, id))
+		QueryExecuter qe = new QueryExecuter();
+		User user = qe.get(User.class, id);
+		qe.close();
+		if (null == user)
 			return new Json(new Result(true, null));
 		return new Json(new Result(false, null));
 	}
 
 	@Post("/users/login.my")
 	public Response login(Http http) {
+		QueryExecuter qe = new QueryExecuter();
 		User userpassed = http.getJsonObject(User.class, "user");
 		if (userpassed == null)
 			return new Json(new Result(false, "허용되지 않은 접근입니다."));
-		User fromDB = DBMethods.get(User.class, userpassed.getId());
+		User fromDB = qe.get(User.class, userpassed.getId());
+		qe.close();
 		if (fromDB == null)
 			return new Json(new Result(false, "없는 사용자 입니다."));
 		if (!fromDB.isPasswordCorrect(userpassed))
@@ -49,24 +54,27 @@ public class UserController {
 	public Response loginPage(Http http) {
 		return new Jsp("login.jsp");
 	}
-	
+
 	@Get("/users/modify.my")
 	public Response modify(Http http) {
 		Jsp jsp = new Jsp("modify.jsp");
 		jsp.put("user", http.getSessionAttribute(User.class, "user"));
 		return jsp;
 	}
-	
+
 	@Post("/users/modify.my")
 	public Response modifyId(Http http) {
 		User user = http.getSessionAttribute(User.class, "user");
 		User usermod = http.getJsonObject(User.class, "user");
 		String oldPassword = http.getParameter("oldPassword");
 		usermod.setPassword(oldPassword);
-		if(!user.isPasswordCorrect(usermod))
+		if (!user.isPasswordCorrect(usermod))
 			return new Json(new Result(false, "기존 패스워드가 일치하지 않습니다."));
 		user.update(usermod);
-		if (!DBMethods.update(user)) {
+		QueryExecuter qe = new QueryExecuter();
+		int effected = qe.update(user);
+		qe.close();
+		if (effected == 0) {
 			return new Json(new Result(false, null));
 		}
 		return new Json(new Result(true, null));
@@ -81,11 +89,13 @@ public class UserController {
 	public Response registerId(Http http) {
 		User user = http.getJsonObject(User.class, "user");
 		user.setTimestamp(new Date());
-		if (DBMethods.insert(user)) {
-			user.insertDefaultTypes();
-			http.setSessionAttribute("user", user);
-			return new Json(new Result(true, null));
+		QueryExecuter qe = new QueryExecuter();
+		int result = qe.insert(user);
+		if (result==0) {
+			return new Json(new Result(false, null));
 		}
-		return new Json(new Result(false, null));
+		user.insertDefaultTypes();
+		http.setSessionAttribute("user", user);
+		return new Json(new Result(true, null));
 	}
 }

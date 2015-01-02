@@ -4,7 +4,7 @@ import java.util.Date;
 
 import easyjdbc.annotation.Key;
 import easyjdbc.annotation.Table;
-import easyjdbc.dao.DBMethods;
+import easyjdbc.query.QueryExecuter;
 
 @Table("user")
 public class User {
@@ -79,8 +79,10 @@ public class User {
 	}
 
 	public void insertDefaultTypes() {
-		DBMethods.insert(new Type(null, id, "공부", "#F7464A"), new Type(null, id, "일", "#46BFBD"), new Type(null, id, "운동", "#FDB45C"), new Type(null,
+		QueryExecuter qe = new QueryExecuter();
+		qe.insert(new Type(null, id, "공부", "#F7464A"), new Type(null, id, "일", "#46BFBD"), new Type(null, id, "운동", "#FDB45C"), new Type(null,
 				id, "기타", "#949FB1"));
+		qe.close();
 	}
 
 	public void update(User usermod) {

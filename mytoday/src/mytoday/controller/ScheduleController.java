@@ -1,9 +1,11 @@
 package mytoday.controller;
 
+import java.util.List;
+
 import mytoday.object.Result;
 import mytoday.object.Schedule;
 import mytoday.object.User;
-import easyjdbc.dao.DBMethods;
+import easyjdbc.query.QueryExecuter;
 import easymapping.annotation.Controller;
 import easymapping.annotation.Get;
 import easymapping.annotation.Post;
@@ -22,7 +24,9 @@ public class ScheduleController {
 		if (!user.getId().equals(schedule.getUserId())) {
 			return new Json(new Result(false, "잘못된 접근입니다."));
 		}
-		DBMethods.insert(schedule);
+		QueryExecuter qe = new QueryExecuter();
+		qe.insert(schedule);
+		qe.close();
 		return new Json(new Result(true, null));
 	}
 
@@ -31,7 +35,10 @@ public class ScheduleController {
 		User user = http.getSessionAttribute(User.class, "user");
 		if (user == null)
 			return null;
-		return new Json(DBMethods.getList(Schedule.class, "userId=? and date=?", user.getId(), http.getParameter("date")));
+		QueryExecuter qe = new QueryExecuter();
+		List<Schedule> schedulelist = qe.getList(Schedule.class, "userId=? and date=?", user.getId(), http.getParameter("date"));
+		qe.close();
+		return new Json(schedulelist);
 	}
 
 	@Post("/schedule/update.my")
@@ -39,18 +46,24 @@ public class ScheduleController {
 		User user = http.getSessionAttribute(User.class, "user");
 		if (user == null)
 			return null;
+		QueryExecuter qe = new QueryExecuter();
 		Schedule schedule = http.getJsonObject(Schedule.class, "schedule");
-		if (!DBMethods.update(schedule))
+		int effected = qe.update(schedule);
+		qe.close();
+		if (effected == 0)
 			return new Json(new Result(false, "sqlError"));
 		return new Json(new Result(true, null));
 	}
-	
+
 	@Post("/schedule/delete.my")
 	public Response delete(Http http) {
 		User user = http.getSessionAttribute(User.class, "user");
 		if (user == null)
 			return null;
-		if (!DBMethods.delete(Schedule.class, "userId=? and id=?", user.getId(), http.getParameter("id")))
+		QueryExecuter qe = new QueryExecuter();
+		boolean deleted = qe.delete(Schedule.class, "userId=? and id=?", user.getId(), http.getParameter("id"));
+		qe.close();
+		if (!deleted)
 			return new Json(new Result(false, "sqlError"));
 		return new Json(new Result(true, null));
 	}
@@ -64,7 +77,7 @@ public class ScheduleController {
 		}
 		return new Jsp("schedule.jsp");
 	}
-	
+
 	@Get("/myweek.my")
 	public Response myweek(Http http) {
 		User user = http.getSessionAttribute(User.class, "user");
@@ -81,8 +94,12 @@ public class ScheduleController {
 		if (user == null) {
 			return null;
 		}
-		Json json = new Json(DBMethods.getList(Schedule.class, "userId=? and `date` BETWEEN ? AND ?", user.getId(), http.getParameter("dateFrom"),
-				http.getParameter("dateTo")));
+		
+		QueryExecuter qe = new QueryExecuter();
+		List<Schedule> schedulelist = qe.getList(Schedule.class, "userId=? and `date` BETWEEN ? AND ?", user.getId(), http.getParameter("dateFrom"),
+				http.getParameter("dateTo"));
+		qe.close();
+		Json json = new Json(schedulelist);
 		json.setDateformat("yyyy-MM-dd");
 		return json;
 	}
