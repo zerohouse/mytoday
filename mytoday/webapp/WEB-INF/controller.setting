@@ -1,6 +1,6 @@
 {
 	"url" : "http://localhost:8080",
 	"controllerPath" : "mytoday.controller",
-	"jspPath" : "/jsp/",
+	"jspPath" : "/WEB-INF/jsp/",
 	"charEncoding" : "utf-8"
 }

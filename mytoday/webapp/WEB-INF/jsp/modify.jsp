@@ -5,12 +5,12 @@
 <html>
 <head>
 <title>Register - Mytoday</title>
-<%@ include file="/components/_css.jspf"%>
+<%@ include file="/WEB-INF/components/_css.jspf"%>
 <link href="/css/register.css" rel="stylesheet" media="screen">
 </head>
 <body ng-app='module'>
 
-	<%@ include file="/components/_header.jspf"%>
+	<%@ include file="/WEB-INF/components/_header.jspf"%>
 	<div class="container" ng-controller="registerController">
 		<div class="row">
 			<div class="register text-center col-md-6 col-md-offset-3">
@@ -103,7 +103,7 @@
 				nickname : "${user.nickname}"
 			}
 	</script>
-	<%@ include file="/components/_imports.jspf"%>
+	<%@ include file="/WEB-INF/components/_imports.jspf"%>
 	<script src="/js/modify.js"></script>
 </body>
 </html>

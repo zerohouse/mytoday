@@ -84,6 +84,13 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 			return;
 		}
 		
+		var keys = quickSort(keys);
+		
+		for(var i=0; i< keys.length; i++){
+			datasetMap[keys[i]] = [];
+		}
+		
+		
 		for(var i=0; i<typekeys.length; i++){
 			var color = $scope.types[typekeys[i]].color;
 			datasetMap[typekeys[i]] = {
@@ -101,9 +108,10 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 			}
 		}
 		
+		
 		var j = 0;
-		for(var key in $scope.days){
-			var data = $scope.days[key];
+		for(var k=0; k<keys.length; k++){
+			var data = $scope.days[keys[k]];
 			for(var i=0; i<data.length; i++){
 				datasetMap[data[i].type].data[j] += data[i].time;
 			}
@@ -114,6 +122,7 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 			datasets.push(datasetMap[typekeys[i]]);
 		}
 		
+				
 		
 		var data = {
 			    labels:  keys,
@@ -135,6 +144,9 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 			$('#chart').width($('.modal-body').width());
 			$('#chart').height($('.modal-body').width()*2/3);
 		},200);
+		
+		console.log(keys);
+		console.log(datasets);
 		loading.end();
 	}
 	
@@ -153,6 +165,12 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 	$scope.startTime = function (schedule){
 		return timeString(schedule.startTime);
 	}
+	
+	$scope.backColor = function(schedule, opacity){
+		var rgb = hexToRgb("#555555");
+		return "rgba(" + rgb.r + ","+rgb.g + ","+rgb.b + "," + opacity +")";
+	}
+
 	
 	
 	
@@ -173,28 +191,6 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 	}
 
 	$scope.timeString = timeString;
-	
-	$scope.setData = function (data){
-		$scope.days = {"스케줄 없음":[]};
-		$scope.daysLength =0;
-		if(data=="null"){
-			$scope.daysLength =1;
-			return;
-			}
-		if(data==undefined)
-			return;
-		delete $scope.days["스케줄 없음"];
-		for(var i=0;i<data.length;i++){
-			if($scope.days[data[i].date] == undefined){
-				$scope.days[data[i].date] = [];
-				$scope.daysLength++;
-				}
-			$scope.days[data[i].date].push(data[i]);
-		}
-		$timeout(function(){
-				$scope.setDraggable();
-		},300);
-	}
 	
 	var datepicker1 = $('.datepicker:eq(0)');
 
@@ -282,33 +278,85 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 		datepicker2.datepicker('setDate', new Date());
 	});
 	
-	$scope.backColor = function(schedule, opacity){
-			var rgb = hexToRgb("#555555");
-		return "rgba(" + rgb.r + ","+rgb.g + ","+rgb.b + "," + opacity +")";
+	
+	
+	$scope.setData = function (data){
+		$scope.days = {"스케줄 없음":[]};
+		$scope.daysLength =0;
+		if(data=="null"){
+			$scope.daysLength =1;
+			return;
+		}
+		if(data==undefined)
+			return;
+		delete $scope.days["스케줄 없음"];
+		
+			
+		for(var i=0;i<data.length;i++){
+			if($scope.days[data[i].date] == undefined){
+				$scope.days[data[i].date] = [];
+				$scope.daysLength++;
+			}
+			$scope.days[data[i].date].push(data[i]);
+		}
+		
+		$timeout(function(){
+			$scope.setDraggable();
+		},300);
 	}
 	
 }]);
 
-function hexToRgba(hex, alpha){
-	var rgb = hexToRgb(hex);
-	return "rgba(" + rgb.r + ","+rgb.g + ","+rgb.b + "," + alpha +")";
+
+function quickSort(items, left, right) {
+    var index;
+    if (items.length > 1) {
+        left = typeof left != "number" ? 0 : left;
+        right = typeof right != "number" ? items.length - 1 : right;
+        index = partition(items, left, right);
+        
+        if (left < index - 1) {
+            quickSort(items, left, index - 1);
+        }
+        
+        if (index < right) {
+            quickSort(items, index, right);
+        }
+        
+    }
+    return items;
+    
+    
+    function partition(items, left, right) {
+        var pivot   = items[Math.floor((right + left) / 2)],
+            i       = left,
+            j       = right;
+
+        while (i <= j) {
+            while (items[i] < pivot) {
+                i++;
+            }
+            while (items[j] > pivot) {
+                j--;
+            }
+            if (i <= j) {
+                swap(items, i, j);
+                i++;
+                j--;
+            }
+        }
+        return i;
+    }
+    function swap(items, firstIndex, secondIndex){
+        var temp = items[firstIndex];
+        items[firstIndex] = items[secondIndex];
+        items[secondIndex] = temp;
+    }
 }
 
 
 
-function hexToRgb(hex) {
-	// Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-	var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-	hex = hex.replace(shorthandRegex, function(m, r, g, b) {
-		return r + r + g + g + b + b;
-	});
-	
-	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-	return result ? {
-		r : parseInt(result[1], 16),
-		g : parseInt(result[2], 16),
-		b : parseInt(result[3], 16)	} : null;
-}
+
 
 $(function() {
 	$.ajax({

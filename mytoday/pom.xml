@@ -90,7 +90,7 @@
 
 
 
-		<dependency>
+		<!-- <dependency>
 			<groupId>easy</groupId>
 			<artifactId>easyjdbc</artifactId>
 			<version>0.0.1</version>
@@ -103,7 +103,7 @@
 			<version>0.0.1</version>
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/easymapping-0.0.1.jar</systemPath>
-		</dependency>
+		</dependency> -->
 	</dependencies>
 
 	<build>

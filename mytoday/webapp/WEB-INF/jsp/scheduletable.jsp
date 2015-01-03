@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<%@ include file="/components/_css.jspf"%>
+<%@ include file="/WEB-INF/components/_css.jspf"%>
 <link href="/plugin/bootstrap/datepicker/datepicker.css"
 	rel="stylesheet" media="screen">
 <link href="/plugin/bootstrap/colorpicker/bootstrap-colorpicker.css"
@@ -14,7 +14,7 @@
 <title>나의 하루 - MyToday</title>
 </head>
 <body ng-app='module'>
-	<%@ include file="/components/_header.jspf"%>
+	<%@ include file="/WEB-INF/components/_header.jspf"%>
 
 
 	<div ng-controller='TableController' ng-init="setDraggable()">
@@ -54,8 +54,8 @@
 							ng-style="{marginBottom:gridpx}" />
 
 						<div class="pointer" ng-repeat="schedule in day"
-							ng-style="{top:scheduleTop(schedule), height:scheduleHeight(schedule), backgroundColor:backColor(schedule, 0.5), borderColor:backColor(schedule)}">
-							<p class='lead'>
+							ng-style="{top:scheduleTop(schedule) ,height:scheduleHeight(schedule), backgroundColor:backColor(schedule, 0.5), borderColor:backColor(schedule)}">
+							<p class='lead' ng-style="{lineHeight: scheduleHeight(schedule)}">
 								<strong>{{schedule.head}}</strong> <span class='draghelper'></span><small
 									ng-show="schedule.timeHelper">{{timeHelper}}부터</small><small
 									ng-show="!schedule.timeHelper">{{timeString(schedule.startTime)}}부터</small>
@@ -90,7 +90,7 @@
 	</div>
 
 
-	<%@ include file="/components/_imports.jspf"%>
+	<%@ include file="/WEB-INF/components/_imports.jspf"%>
 	<script src="/plugin/chartjs/Chart.min.js"></script>
 	<script src="/plugin/bootstrap/bootstrap-datepicker.js"></script>
 	<script src="/plugin/bootstrap/colorpicker/bootstrap-colorpicker.js"></script>

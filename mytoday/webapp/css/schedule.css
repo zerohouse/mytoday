@@ -31,11 +31,13 @@
 }
 
 .transparent {
+	BACKGROUND-color: transparent;
 	border: none;
-	background: transparent;
+	box-shadow: none;
+	OUTLINE:NONE;
 }
 
-.emoticonWrap{
+.emoticonWrap {
 	border-radius: 20px;
 	padding: 10px;
 	outline: none;
@@ -43,16 +45,44 @@
 	margin-left: 20px;
 }
 
-button{
-	outline:none;
+button {
+	outline: none;
 }
 
-.emoticon{
-	margin:3px;
+.emoticon {
+	margin: 3px;
 	width: 80px;
 	height: 80px;
-	border-radius:40px;
-	border : 1px solid #eee;
+	border-radius: 40px;
+	border: 1px solid #eee;
 	display: inline-block;
 	background-image: url('../img/emoticon.gif');
+}
+
+.color-wrapper{
+	padding:0;
+}
+
+
+hr {
+	border-top: 1px dotted #eee;
+}
+
+.schedule{
+	width: 100%;
+	position: absolute;
+	border-radius: 10px;
+	text-align: center;
+}
+
+.full{
+	position:absolute;
+	width: 100%;
+	height: 100%;
+	left:0;
+	top:0;
+}
+
+.relative{
+	position:relative;
 }

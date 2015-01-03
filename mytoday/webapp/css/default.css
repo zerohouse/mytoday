@@ -1,5 +1,11 @@
 @CHARSET "UTF-8";
 
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+
+body {
+	font-family: 'Nanum Gothic', serif;
+}
+
 .margin-auto {
 	margin: auto;
 }

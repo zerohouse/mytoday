@@ -8,12 +8,12 @@
 <c:if test="${not empty sessionScope.user}">
 	<c:redirect url="/users/modify.my" />
 </c:if>
-<%@ include file="/components/_css.jspf"%>
+<%@ include file="/WEB-INF/components/_css.jspf"%>
 <link href="/css/register.css" rel="stylesheet" media="screen">
 </head>
 <body ng-app='module'>
 
-	<%@ include file="/components/_header.jspf"%>
+	<%@ include file="/WEB-INF/components/_header.jspf"%>
 	<div class="container" ng-controller="registerController">
 		<div class="row">
 			<div class="register text-center col-md-6 col-md-offset-3">
@@ -82,7 +82,7 @@
 	</div>
 	</div>
 
-	<%@ include file="/components/_imports.jspf"%>
+	<%@ include file="/WEB-INF/components/_imports.jspf"%>
 	<script src="/js/register.js"></script>
 </body>
 </html>
