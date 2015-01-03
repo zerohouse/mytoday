@@ -148,7 +148,11 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 			    multiTooltipTemplate: "<%=datasetLabel%>: <%= value/4 %>시간",
 			    scaleLabel: "<%= value/4 %>시간" 	};
 		
-		
+		var notScaleOption = {
+			tooltipTemplate: "<%=label%>: <%= value/4 %>시간",
+		    multiTooltipTemplate: "<%=datasetLabel%>: <%= value/4 %>시간",
+		    scaleLabel: "<%= value/4 %>시간" 	
+		}
 		var radarData = {
 				labels: [],
 				datasets: [
@@ -186,9 +190,9 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 		var ctx = document.getElementById("lineChart").getContext("2d");
 		var lineChart = new Chart(ctx).Line(data,options);
 		var pieCtx = document.getElementById("pieChart").getContext("2d");
-		var pieChart = new Chart(pieCtx).Doughnut(pieChartData);
+		var pieChart = new Chart(pieCtx).Doughnut(pieChartData, notScaleOption);
 		var radarCtx = document.getElementById("radarChart").getContext("2d");
-		var radarChart = new Chart(radarCtx).Radar(radarData);
+		var radarChart = new Chart(radarCtx).Radar(radarData, notScaleOption);
 		
 		controllers.TableController.radarChartLabels = [{name:"목표", color: "rgba(220,220,220,1)"}, {name:"나의 생활", color: "rgba(151,187,205,1)"}];
 		
