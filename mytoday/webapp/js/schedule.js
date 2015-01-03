@@ -254,7 +254,7 @@ app.controller('TodayDoingController', [
 					angular.element($(this)).data().$scope.schedule.timeHelper = false;
 					angular.element($(this)).data().$scope.schedule.startTime += (ui.position.top - ui.originalPosition.top) / gridpx;
 					var schedule = angular.element($(this)).data().$scope.schedule;
-					schedule.date = $('#datepicker').datepicker('getDate');
+					schedule.date = $('#datepicker').val();
 				    $http(postRequest('/schedule/update.my', {
 						schedule : JSON.stringify(schedule)
 					})).success(function(result) {
