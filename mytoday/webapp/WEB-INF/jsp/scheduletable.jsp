@@ -21,18 +21,19 @@
 		<div class='container'>
 			<div class='row'>
 				<div class='col-md-3 col-md-offset-1'>
-					<span class="glyphicon glyphicon-chevron-left big-icon pointer"></span> <input
-						class='datepicker' ng-model="dateFrom" type="text"> <span
-						class="glyphicon glyphicon-chevron-right big-icon pointer"></span>
+					<span class="glyphicon glyphicon-chevron-left big-icon pointer"></span>
+					<input class='datepicker' ng-model="dateFrom" type="text">
+					<span class="glyphicon glyphicon-chevron-right big-icon pointer"></span>
 				</div>
 				<div class='col-md-3'>
-					<span class="glyphicon glyphicon-chevron-left big-icon pointer"></span> <input
-						class='datepicker' ng-model="dateTo" type="text"> <span
+					<span class="glyphicon glyphicon-chevron-left big-icon pointer"></span>
+					<input class='datepicker' ng-model="dateTo" type="text"> <span
 						class="glyphicon glyphicon-chevron-right big-icon pointer"></span>
 				</div>
 				<div class='col-md-2 pull-right'>
-					<a type="button" data-toggle="modal" data-target="#newDone"
-						ng-click="toChart()"><span class='glyphicon glyphicon-signal big-icon right-buffer pointer'></span></a>
+					<a class='pointer' type="button" data-toggle="modal" data-target="#newDone"
+						ng-click="toChart()">차트보기<span
+						class='glyphicon glyphicon-signal big-icon right-buffer'></span></a>
 					<span ng-show="!saved"
 						class="glyphicon glyphicon-refresh bigger-icon red"></span> <span
 						ng-show="saved" class="glyphicon glyphicon-ok bigger-icon green"></span>
@@ -66,28 +67,67 @@
 				</ul>
 			</div>
 		</div>
-	</div>
+		<div class="modal fade" id="newDone" tabindex="-1" role="dialog"
+			aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog" style="width: 700px">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h2 style="text-align:center">나의 시간 분석하기</h2>
+					</div>
+					<div class="modal-body">
 
-	<div class="modal fade" id="newDone" tabindex="-1" role="dialog"
-		aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h1>차트보기</h1>
-				</div>
-				<div class="modal-body">
-					<canvas id='chart' width="600" height="440"></canvas>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+						<div role="tabpanel">
+
+							<!-- Nav tabs -->
+							<ul class="nav nav-tabs" role="tablist">
+								<li role="presentation" class="active"><a href="#trend"
+									aria-controls="trend" role="tab" data-toggle="tab">변화 추이</a></li>
+								<li role="presentation"><a href="#ratio"
+									aria-controls="ratio" role="tab" data-toggle="tab">전체 비율</a></li>
+								<li role="presentation"><a href="#compare"
+									aria-controls="compare" role="tab" data-toggle="tab">비교</a></li>
+							</ul>
+
+							<!-- Tab panes -->
+							<div class="tab-content">
+								<div role="tabpanel" class="tab-pane active" id="trend">
+									<canvas class='chart' id='lineChart' width="600" height="440"></canvas>
+
+								</div>
+								<div role="tabpanel" class="tab-pane" id="ratio">
+									<canvas class='chart' id='pieChart' width="400" height="400"></canvas>
+									<div class='labels'>
+										<div ng-repeat="type in types" ng-style="{'color':type.color}"><span class="glyphicon glyphicon-stop"></span>{{type.name}}</div>
+									</div>
+								</div>
+								<div role="tabpanel" class="tab-pane" id="compare">
+									<canvas class='chart' id='radarChart' width="450" height="450"></canvas>
+									<div class='labels'>
+										<div ng-repeat="label in radarChartLabels" ng-style="{'color':label.color}"><span class="glyphicon glyphicon-stop"></span>{{label.name}}</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+
+
+
+
+
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+
 
 
 	<%@ include file="/WEB-INF/components/_imports.jspf"%>

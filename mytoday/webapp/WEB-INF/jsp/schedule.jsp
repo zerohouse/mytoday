@@ -123,8 +123,7 @@
 						<div class='panel-body relative'>
 							<hr ng-repeat="time in times" style="margin-top: 0"
 								ng-style="{marginBottom:gridpx}" />
-							<div ng-repeat="type in data" class='full'>
-								<div class="pointer schedule" ng-repeat="schedule in type"
+								<div class="pointer schedule" ng-repeat="schedule in originalData"
 									ng-style="{top:scheduleTop(schedule) ,height:scheduleHeight(schedule), backgroundColor:backColor(schedule, 0.5), borderColor:backColor(schedule)}">
 									<p class='lead'
 										ng-style="{lineHeight: scheduleHeight(schedule)}">
@@ -134,7 +133,7 @@
 										{{schedule.body}}
 									</p>
 								</div>
-							</div>
+							
 						</div>
 					</div>
 				</div>

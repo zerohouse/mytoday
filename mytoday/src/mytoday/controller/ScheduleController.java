@@ -1,5 +1,6 @@
 package mytoday.controller;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import mytoday.object.Result;
@@ -25,9 +26,9 @@ public class ScheduleController {
 			return new Json(new Result(false, "잘못된 접근입니다."));
 		}
 		QueryExecuter qe = new QueryExecuter();
-		qe.insert(schedule);
+		BigInteger key = (BigInteger) qe.insertAndGetPrimaryKey(schedule);
 		qe.close();
-		return new Json(new Result(true, null));
+		return new Json(new Result(true, key.toString()));
 	}
 
 	@Post("/schedule/getlist.my")

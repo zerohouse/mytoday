@@ -102,9 +102,10 @@ app.controller('TodayDoingController', [
 				// 애드 컨텐트
 				if($scope.data[data.type] == undefined)
 					$scope.data[data.type] = [];
-				
+				$scope.originalData.push(data);
 				$scope.data[data.type].push(data);
 				
+				setTimeout(function(){$scope.setDraggable();}, 300);
 			}
 
 			$scope.getTextColor = function(bgColor) {
@@ -165,7 +166,8 @@ app.controller('TodayDoingController', [
 					})).success(function(result) {
 						if (result.success) {
 							add(result.error);
-							controllers.TodayDoingController.saved  = true; controllers.TodayDoingController.$apply();
+							controllers.TodayDoingController.saved  = true;
+							controllers.TodayDoingController.$apply();
 						} else {
 							warring("저장 오류" + result.error);
 						}
@@ -213,6 +215,7 @@ app.controller('TodayDoingController', [
 			$scope.data = {};
 
 			$scope.dataSetting = function(data) {
+				$scope.originalData = data;
 				$scope.data = {};
 				for (var i = 0; i < data.length; i++) {
 					if ($scope.data[data[i].type] == undefined) {
@@ -221,7 +224,7 @@ app.controller('TodayDoingController', [
 					$scope.data[data[i].type].push(data[i]);
 				}
 				$scope.$apply();
-				$scope.setDraggable();
+				setTimeout(function(){$scope.setDraggable();},300);
 			};
 
 			
@@ -239,7 +242,7 @@ app.controller('TodayDoingController', [
 				
 			
 			$scope.setDraggable = function (){
-				$('.schedule').draggable({containment: "parent", axis: "y" , grid : [gridpx,gridpx], 
+				$('.schedule:not(.ui-draggable)').draggable({containment: "parent", axis: "y" , grid : [gridpx,gridpx], 
 					drag : function(even, ui){
 						$scope.saved = false;
 						var time = angular.element($(this)).data().$scope.schedule.startTime + (ui.position.top - ui.originalPosition.top) / gridpx;
@@ -277,7 +280,7 @@ app.controller('TodayDoingController', [
 			}
 			
 			$scope.backColor = function(schedule, opacity){
-				var rgb = hexToRgb("#555555");
+				var rgb = hexToRgb($scope.types[schedule.type].color);
 				return "rgba(" + rgb.r + ","+rgb.g + ","+rgb.b + "," + opacity +")";
 			}
 			
@@ -312,7 +315,6 @@ app.controller('inputWindow', [ '$http', '$scope', function($http, $scope) {
 
 		$scope.content.type = $scope.type.id;
 
-		controllers.TodayDoingController.addContent($scope.content);
 
 		$('#newDone').modal('hide');
 
@@ -322,8 +324,10 @@ app.controller('inputWindow', [ '$http', '$scope', function($http, $scope) {
 				schedule : JSON.stringify($scope.content)
 			})).success(function(result) {
 				if (result.success) {
+					$scope.content.id = result.error;
+					controllers.TodayDoingController.addContent($scope.content);
 					$scope.reset();
-					controllers.TodayDoingController.saved  = true; controllers.TodayDoingController.$apply();
+					controllers.TodayDoingController.saved  = true;
 				} else {
 					warring("저장 오류" + result.error);
 				}

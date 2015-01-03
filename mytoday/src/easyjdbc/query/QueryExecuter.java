@@ -138,7 +138,7 @@ public class QueryExecuter {
 	}
 
 	public boolean delete(Class<?> cLass, String WhereClause, Object... parameters) {
-		ExecuteQuery exe = new ExecuteQuery("delete from " + cLass.getAnnotation(Table.class).value(), null);
+		ExecuteQuery exe = new ExecuteQuery("delete from " + cLass.getAnnotation(Table.class).value() + " where " + WhereClause, null);
 		for (int i = 0; i < parameters.length; i++) {
 			exe.addParameters(parameters[i]);
 		}

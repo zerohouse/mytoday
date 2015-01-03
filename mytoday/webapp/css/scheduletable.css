@@ -86,3 +86,23 @@ button {
 hr {
 	border-top: 1px dotted #eee;
 }
+
+
+.tab-pane{
+	text-align:center;
+}
+
+.chart{
+	display:inline-block;
+	margin-top:20px;
+	margin-bottom:20px;
+}
+
+.labels{
+	margin-top: 20px;
+	margin-right: 30px;
+	position: absolute;
+	right: 10px;
+	top: 50px;
+	text-align: left;
+}

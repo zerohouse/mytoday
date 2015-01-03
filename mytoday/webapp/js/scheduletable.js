@@ -72,8 +72,6 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 		}
 		
 		var keys = Object.keys($scope.days);
-		var datasets = [];
-		var datasetMap = {};
 		
 		
 		if(keys==undefined || keys.length ==0){
@@ -83,6 +81,10 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 			},300);
 			return;
 		}
+				
+		var datasets = [];
+		var datasetMap = {};
+		var pieChartData = {};
 		
 		var keys = quickSort(keys);
 		
@@ -92,9 +94,17 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 		
 		
 		for(var i=0; i<typekeys.length; i++){
+			
 			var color = $scope.types[typekeys[i]].color;
+			var name = $scope.types[typekeys[i]].name;
+			pieChartData[typekeys[i]] = {};
+			pieChartData[typekeys[i]].color = color
+			pieChartData[typekeys[i]].highlight = hexToRgba(color, 0.6);
+			pieChartData[typekeys[i]].label = name;
+			pieChartData[typekeys[i]].value = 0;
+			
 			datasetMap[typekeys[i]] = {
-				label : $scope.types[typekeys[i]].name,
+				label : name,
 				pointStrokeColor: "#fff",
 			    pointHighlightFill: "#fff",
 				fillColor : hexToRgba(color, 0.2),
@@ -110,10 +120,11 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 		
 		
 		var j = 0;
-		for(var k=0; k<keys.length; k++){
+		for(var k=0; k < keys.length; k++){
 			var data = $scope.days[keys[k]];
 			for(var i=0; i<data.length; i++){
 				datasetMap[data[i].type].data[j] += data[i].time;
+				pieChartData[data[i].type].value += data[i].time;
 			}
 			j++;
 		}
@@ -121,7 +132,6 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 		for(var i=0; i<typekeys.length; i++){
 			datasets.push(datasetMap[typekeys[i]]);
 		}
-		
 				
 		
 		var data = {
@@ -130,23 +140,59 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 			};
 		
 		var options = {  
+				scaleOverride: true,
+			    scaleSteps: 6,
+			    scaleStepWidth: 8,
+			    scaleStartValue: 0,
 				tooltipTemplate: "<%=label%>: <%= value %>",
-			    multiTooltipTemplate: "<%=datasetLabel%>: <%= value/4 %>시간"
-			    	};
+			    multiTooltipTemplate: "<%=datasetLabel%>: <%= value/4 %>시간",
+			    scaleLabel: "<%= value/4 %>시간" 	};
 		
-
 		
-		var ctx = document.getElementById("chart").getContext("2d");
+		var radarData = {
+				labels: [],
+				datasets: [
+				           {
+				        	   label: "나의 생활",
+				        	   fillColor: "rgba(151,187,205,0.2)",
+				        	   strokeColor: "rgba(151,187,205,1)",
+				        	   pointColor: "rgba(151,187,205,1)",
+				        	   pointStrokeColor: "#fff",
+				        	   pointHighlightFill: "#fff",
+				        	   pointHighlightStroke: "rgba(151,187,205,1)",
+				        	   data: []
+				           },
+				           {
+				        	   label: "목표",
+				        	   fillColor: "rgba(220,220,220,0.2)",
+				        	   strokeColor: "rgba(220,220,220,1)",
+				        	   pointColor: "rgba(220,220,220,1)",
+				        	   pointStrokeColor: "#fff",
+				        	   pointHighlightFill: "#fff",
+				        	   pointHighlightStroke: "rgba(220,220,220,1)",
+				        	   data: []
+				           }
+				           ]
+		};
 
+		var keys = Object.keys(pieChartData);
+				
+		for(var i=0; i<keys.length ;i++){
+			radarData.labels.push(pieChartData[keys[i]].label);
+			radarData.datasets[0].data.push(pieChartData[keys[i]].value);
+			radarData.datasets[1].data.push(pieChartData[keys[i]].value + 10);
+		}
+
+		var ctx = document.getElementById("lineChart").getContext("2d");
 		var lineChart = new Chart(ctx).Line(data,options);
+		var pieCtx = document.getElementById("pieChart").getContext("2d");
+		var pieChart = new Chart(pieCtx).Doughnut(pieChartData);
+		var radarCtx = document.getElementById("radarChart").getContext("2d");
+		var radarChart = new Chart(radarCtx).Radar(radarData);
 		
-		setTimeout(function(){
-			$('#chart').width($('.modal-body').width());
-			$('#chart').height($('.modal-body').width()*2/3);
-		},200);
+		controllers.TableController.radarChartLabels = [{name:"목표", color: "rgba(220,220,220,1)"}, {name:"나의 생활", color: "rgba(151,187,205,1)"}];
 		
-		console.log(keys);
-		console.log(datasets);
+		
 		loading.end();
 	}
 	
@@ -273,7 +319,7 @@ app.controller('TableController', [ '$timeout', '$http', '$scope', function($tim
 	
 	$timeout(function(){
 		var setDate = new Date();
-		setDate.setDate(setDate.getDate()-7);
+		setDate.setDate(setDate.getDate()-6);
 		datepicker1.datepicker('setDate', setDate);
 		datepicker2.datepicker('setDate', new Date());
 	});
