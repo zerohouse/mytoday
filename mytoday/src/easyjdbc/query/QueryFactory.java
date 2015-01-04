@@ -7,13 +7,15 @@ import java.util.List;
 import easyjdbc.annotation.Exclude;
 import easyjdbc.annotation.Key;
 import easyjdbc.annotation.Table;
+import easyjdbc.query.support.Methods;
+import easyjdbc.query.support.PrimaryFields;
 
 public class QueryFactory {
 
 	private QueryFactory() {
 	}
 
-	public static Query getInsertQuery(Object record) {
+	public static ExecuteQuery getInsertQuery(Object record) {
 		Table anotation = record.getClass().getAnnotation(Table.class);
 		String tableName = anotation.value();
 		List<Field> fields = excludeNotThisDB(record.getClass());
@@ -23,7 +25,7 @@ public class QueryFactory {
 		Object param;
 		for (int i = 0; i < fields.size(); i++) {
 			try {
-				param = getFieldObject(fields.get(i).getName(), record);
+				param = Methods.getFieldObject(fields.get(i).getName(), record);
 				if (param != null) {
 					fieldsString += fields.get(i).getName() + ",";
 					valueString += "?,";
@@ -39,7 +41,7 @@ public class QueryFactory {
 		return new ExecuteQuery(sql, parameters);
 	}
 
-	public static Query insertIfNotExistIgnore(Object record) {
+	public static ExecuteQuery insertIfNotExistIgnore(Object record) {
 		Table anotation = record.getClass().getAnnotation(Table.class);
 		String tableName = anotation.value();
 		List<Field> fields = excludeNotThisDB(record.getClass());
@@ -49,7 +51,7 @@ public class QueryFactory {
 		Object param;
 		for (int i = 0; i < fields.size(); i++) {
 			try {
-				param = getFieldObject(fields.get(i).getName(), record);
+				param = Methods.getFieldObject(fields.get(i).getName(), record);
 				if (param != null) {
 					fieldsString += fields.get(i).getName() + ",";
 					valueString += "?,";
@@ -65,7 +67,7 @@ public class QueryFactory {
 		return new ExecuteQuery(sql, parameters);
 	}
 
-	public static Query insertIfExistUpdate(Object record) {
+	public static ExecuteQuery insertIfExistUpdate(Object record) {
 		Table anotation = record.getClass().getAnnotation(Table.class);
 		String tableName = anotation.value();
 		List<Field> fields = excludeNotThisDB(record.getClass());
@@ -75,7 +77,7 @@ public class QueryFactory {
 		Object param;
 		for (int i = 0; i < fields.size(); i++) {
 			try {
-				param = getFieldObject(fields.get(i).getName(), record);
+				param = Methods.getFieldObject(fields.get(i).getName(), record);
 				if (param != null) {
 					fieldsString += fields.get(i).getName() + ",";
 					valueString += "?,";
@@ -93,7 +95,7 @@ public class QueryFactory {
 		return new ExecuteQuery(sql, parameters);
 	}
 
-	public static Query getUpdateQuery(Object record) {
+	public static ExecuteQuery getUpdateQuery(Object record) {
 		String tableName = record.getClass().getAnnotation(Table.class).value();
 		List<Field> excludedFields = excludeNotThisDB(record.getClass());
 		PrimaryFields primaryField = new PrimaryFields(excludedFields);
@@ -106,7 +108,7 @@ public class QueryFactory {
 		return new ExecuteQuery(sql, parameters);
 	}
 
-	public static Query getDeleteQuery(Object record) {
+	public static ExecuteQuery getDeleteQuery(Object record) {
 		String tableName = record.getClass().getAnnotation(Table.class).value();
 		PrimaryFields primaryField = new PrimaryFields(record.getClass());
 		Object[] primaryKey;
@@ -117,7 +119,7 @@ public class QueryFactory {
 		return new ExecuteQuery(sql, parameters);
 	}
 
-	public static Query getRecordQuery(Class<?> cLass, Object... primaryKey) {
+	public static GetRecordQuery getRecordQuery(Class<?> cLass, Object... primaryKey) {
 		Table anotation = cLass.getAnnotation(Table.class);
 		List<Field> excludedFields = excludeNotThisDB(cLass);
 		PrimaryFields primaryField = new PrimaryFields(excludedFields);
@@ -129,7 +131,7 @@ public class QueryFactory {
 		return new GetRecordQuery(excludedFields.size(), sql, parameters);
 	}
 	
-	public static Query getRecordQuery(Class<?> cLass) {
+	public static GetRecordQuery getRecordQuery(Class<?> cLass) {
 		Table anotation = cLass.getAnnotation(Table.class);
 		List<Field> excludedFields = excludeNotThisDB(cLass);
 		String sql = "select * from " + anotation.value();
@@ -139,7 +141,7 @@ public class QueryFactory {
 
 	
 
-	public static Query getRecordsQuery(Class<?> cLass, String condition, Object... objects) {
+	public static GetRecordsQuery getRecordsQuery(Class<?> cLass, String condition, Object... objects) {
 		Table anotation = cLass.getAnnotation(Table.class);
 		List<Field> excludedFields = excludeNotThisDB(cLass);
 		String sql;
@@ -166,7 +168,7 @@ public class QueryFactory {
 			if (fields.get(i).isAnnotationPresent(Key.class))
 				continue;
 			try {
-				param = getFieldObject(fields.get(i).getName(), record);
+				param = Methods.getFieldObject(fields.get(i).getName(), record);
 				if (param != null) {
 					fieldsString += fields.get(i).getName() + "=?, ";
 					paramSaveThisList.add(param);
@@ -179,13 +181,7 @@ public class QueryFactory {
 		return fieldsString;
 	}
 
-	static Object getFieldObject(String fieldName, Object record) {
-		try {
-			return record.getClass().getMethod(getterString(fieldName), (Class<?>[]) null).invoke(record);
-		} catch (Exception e) {
-			return null;
-		}
-	}
+	
 
 	static List<Field> excludeNotThisDB(Class<?> cLass) {
 		List<Field> result = new ArrayList<Field>();
@@ -197,8 +193,5 @@ public class QueryFactory {
 		return result;
 	}
 
-	private static String getterString(String fieldName) {
-		return "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
-	}
 
 }

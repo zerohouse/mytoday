@@ -7,9 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetRecordQuery extends QueryProto {
+public class GetRecordQuery extends Query {
 
-	@Override
 	public List<Object> execute(Connection conn) throws SQLException {
 		List<Object> record = new ArrayList<Object>();
 		PreparedStatement pstmt = conn.prepareStatement(sql);
