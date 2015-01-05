@@ -2,7 +2,7 @@ package easyjdbc.query.execute;
 
 import easyjdbc.annotation.Table;
 
-public class InsertQuery extends ExecuteQuery {
+public class InsertQuery extends ExecuteableQuery {
 
 	private String tableName;
 	private Object instance;
@@ -10,7 +10,7 @@ public class InsertQuery extends ExecuteQuery {
 	public InsertQuery(Object instance) {
 		this.instance = instance;
 		Class<?> type = instance.getClass();
-		fieldsDeclare(type);
+		setByInstance(instance);
 		Table table = type.getAnnotation(Table.class);
 		this.tableName = table.value();
 		sql = "insert into " + tableName + " (" + joinedString(columns, ", ") + joinedString(keys, ", ", 2) + ") ";

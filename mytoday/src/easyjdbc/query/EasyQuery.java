@@ -6,6 +6,7 @@ import java.util.Map;
 
 import easyjdbc.annotation.Exclude;
 import easyjdbc.annotation.Key;
+import easyjdbc.query.support.DBColumn;
 
 public abstract class EasyQuery extends Query {
 
@@ -27,6 +28,17 @@ public abstract class EasyQuery extends Query {
 		return result;
 	}
 
+	protected String getNotNullFieldString(Map<String, DBColumn> columns, String delimiter, int subLength) {
+		String result = new String();
+		for (String key : columns.keySet()) {
+			DBColumn column = columns.get(key);
+			if (column.hasObject())
+				result += column.getColumnName() + delimiter;
+		}
+		result = result.substring(0, result.length() - subLength);
+		return result;
+	}
+
 	protected String getQuestionComma(int commaLength) {
 		String result = new String();
 		for (int i = 0; i < commaLength; i++) {
@@ -42,8 +54,23 @@ public abstract class EasyQuery extends Query {
 			result += columns.get(key).getColumnName() + delimiter;
 		return result;
 	}
-	
-	protected void fieldsDeclare(Class<?> cLass) {
+
+	protected void setByInstance(Object instance) {
+		Field[] fields = instance.getClass().getDeclaredFields();
+		for (int i = 0; i < fields.length; i++) {
+			if (fields[i].isAnnotationPresent(Exclude.class))
+				continue;
+			DBColumn dbCol = new DBColumn(fields[i]);
+			dbCol.setByInstance(instance);
+			if (fields[i].isAnnotationPresent(Key.class)) {
+				keys.put(fields[i].getName(), dbCol);
+				continue;
+			}
+			columns.put(fields[i].getName(), dbCol);
+		}
+	}
+
+	protected void setByType(Class<?> cLass) {
 		Field[] fields = cLass.getDeclaredFields();
 		for (int i = 0; i < fields.length; i++) {
 			if (fields[i].isAnnotationPresent(Exclude.class))
@@ -56,7 +83,7 @@ public abstract class EasyQuery extends Query {
 		}
 	}
 
-	protected void fieldsDeclare(Class<?> cLass, Object... primaryKey) {
+	protected void setByTypeAndPrimaryKey(Class<?> cLass, Object... primaryKey) {
 		Field[] fields = cLass.getDeclaredFields();
 		int j = 0;
 		for (int i = 0; i < fields.length; i++) {

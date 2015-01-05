@@ -6,6 +6,10 @@ import easyjdbc.annotation.Table;
 @Table("type")
 public class Type {
 	
+	@Override
+	public String toString() {
+		return "Type [id=" + id + ", userId=" + userId + ", name=" + name + ", color=" + color + "]";
+	}
 	@Key
 	private Integer id;
 	@Key

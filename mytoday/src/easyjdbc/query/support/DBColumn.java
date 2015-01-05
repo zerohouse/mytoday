@@ -1,4 +1,4 @@
-package easyjdbc.query;
+package easyjdbc.query.support;
 
 import java.lang.reflect.Field;
 
@@ -14,8 +14,8 @@ public class DBColumn {
 		this(field);
 		this.object = object;
 	}
-	
-	public DBColumn(Field field){
+
+	public DBColumn(Field field) {
 		this.field = field;
 		if (field.isAnnotationPresent(Column.class)) {
 			this.columnName = field.getAnnotation(Column.class).value();
@@ -31,8 +31,7 @@ public class DBColumn {
 	public String getColumnName() {
 		return columnName;
 	}
-	
-	
+
 	public Object setObjectField(Object instance, Object parameter) {
 		try {
 			return instance.getClass().getMethod(setterString(field.getName()), field.getType()).invoke(instance, parameter);
@@ -40,7 +39,6 @@ public class DBColumn {
 			return null;
 		}
 	}
-	
 
 	public Object getInvokedObject(Object instance) {
 		try {
@@ -49,15 +47,23 @@ public class DBColumn {
 			return null;
 		}
 	}
-	
-	
+
 	public String getterString(String fieldName) {
 		return "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
 	}
-	
 
 	public String setterString(String fieldName) {
 		return "set" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+	}
+
+	public void setByInstance(Object instance) {
+		this.object = getInvokedObject(instance);
+	}
+
+	public boolean hasObject() {
+		if (object == null)
+			return false;
+		return true;
 	}
 
 }

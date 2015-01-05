@@ -1,4 +1,4 @@
-package easyjdbc.query.get;
+package easyjdbc.query.raw;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

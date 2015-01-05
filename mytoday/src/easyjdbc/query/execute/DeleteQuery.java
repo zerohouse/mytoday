@@ -1,16 +1,16 @@
 package easyjdbc.query.execute;
 
 import easyjdbc.annotation.Table;
-import easyjdbc.query.DBColumn;
+import easyjdbc.query.support.DBColumn;
 
-public class DeleteQuery extends ExecuteQuery {
+public class DeleteQuery extends ExecuteableQuery {
 
 	private String tableName;
 	Class<?> type;
 
 	public DeleteQuery(Class<?> type, Object... primaryKey) {
 		this.type = type;
-		fieldsDeclare(type);
+		setByTypeAndPrimaryKey(type, primaryKey);
 		Table table = type.getAnnotation(Table.class);
 		this.tableName = table.value();
 		sql = "delete from " + tableName + WHERE + joinedString(keys, "=? and ", 5);
@@ -18,15 +18,14 @@ public class DeleteQuery extends ExecuteQuery {
 			parameters.add(primaryKey[i]);
 	}
 
-	public DeleteQuery(Object record) {
-		this.type = record.getClass();
-		fieldsDeclare(type);
-		Table table = type.getAnnotation(Table.class);
+	public DeleteQuery(Object instance) {
+		setByInstance(instance);
+		Table table = instance.getClass().getAnnotation(Table.class);
 		this.tableName = table.value();
 		sql = "delete from " + tableName + WHERE + joinedString(keys, "=? and ", 5);
 		for (String key : keys.keySet()) {
 			DBColumn column = keys.get(key);
-			parameters.add(column.getInvokedObject(record));
+			parameters.add(column.getInvokedObject(instance));
 		}
 	}
 }

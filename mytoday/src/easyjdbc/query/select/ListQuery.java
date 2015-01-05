@@ -1,4 +1,4 @@
-package easyjdbc.query.get;
+package easyjdbc.query.select;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,41 +8,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 import easyjdbc.annotation.Table;
-import easyjdbc.query.DBColumn;
 import easyjdbc.query.EasyQuery;
+import easyjdbc.query.support.DBColumn;
 
 public class ListQuery<T> extends EasyQuery {
 
-	Class<T> type;
-	String tableName;
+	private Class<T> type;
+	private String tableName;
+	private List<String> whereClauses = new ArrayList<String>();
+	private String order = "";
+	private String limit = "";
+	private int pageSize;
 
 	public ListQuery(Class<T> cLass, String whereClause, Object... keys) {
 		type = cLass;
-		System.out.println(type);
-		fieldsDeclare(type);
+		setByType(cLass);
 		Table table = type.getAnnotation(Table.class);
+		this.pageSize = table.pageSize();
 		this.tableName = table.value();
-		sql = "select * from " + tableName;
-		sql += WHERE + whereClause;
+		whereClauses.add(whereClause);
 		for (int i = 0; i < keys.length; i++)
 			parameters.add(keys[i]);
-
 	}
 
 	public ListQuery(Class<T> cLass) {
 		type = cLass;
-		System.out.println(type);
-		fieldsDeclare(type);
+		setByType(cLass);
 		Table table = type.getAnnotation(Table.class);
+		this.pageSize = table.pageSize();
 		this.tableName = table.value();
-		sql = "select * from " + tableName;
 		if (!table.defaultCondition().equals(""))
-			sql += WHERE + table.defaultCondition();
-		System.out.println(sql);
+			whereClauses.add(table.defaultCondition());
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<T> execute(Connection conn) {
+		setSql();
 		List<T> result = new ArrayList<T>();
 		PreparedStatement pstmt;
 		try {
@@ -85,6 +86,35 @@ public class ListQuery<T> extends EasyQuery {
 			e1.printStackTrace();
 		}
 		return null;
+	}
+
+	private void setSql() {
+		sql = "select * from " + tableName;
+		if (whereClauses.size() != 0)
+			setWhere();
+		sql += order;
+		sql += limit;
+	}
+
+	private void setWhere() {
+		sql += " where ";
+		for (int i = 0; i < whereClauses.size(); i++) {
+			sql += whereClauses.get(i) + " ";
+		}
+	}
+	
+	public void setOrder(String columnName, boolean asc){
+		order = "order by " + columnName +" "; 
+		if(!asc)
+			order += "desc ";
+	}
+
+	public void setPage(int pageIndex) {
+		limit = " limit " + (pageSize * (pageIndex - 1)) + "," + pageSize + " ";
+	}
+
+	public void setPage(int pageIndex, int pageSize) {
+		limit = " limit " + (pageSize * (pageIndex - 1)) + "," + pageSize + " ";
 	}
 
 }

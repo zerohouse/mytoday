@@ -6,12 +6,13 @@ import java.sql.SQLException;
 
 import easyjdbc.query.EasyQuery;
 
-public class ExecuteQuery extends EasyQuery {
+public class ExecuteableQuery extends EasyQuery {
 
 	public Boolean execute(Connection conn) {
 		PreparedStatement pstmt;
 		try {
 			pstmt = conn.prepareStatement(sql);
+			System.out.println(sql);
 			if (parameters != null)
 				for (int j = 0; j < parameters.size(); j++) {
 					pstmt.setObject(j + 1, parameters.get(j));

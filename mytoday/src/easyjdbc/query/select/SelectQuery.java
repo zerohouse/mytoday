@@ -1,4 +1,4 @@
-package easyjdbc.query.get;
+package easyjdbc.query.select;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,28 +6,29 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import easyjdbc.annotation.Table;
-import easyjdbc.query.DBColumn;
 import easyjdbc.query.EasyQuery;
+import easyjdbc.query.support.DBColumn;
 
-public class SelectWhereQuery<T> extends EasyQuery {
+public class SelectQuery<T> extends EasyQuery {
 
 	String tableName;
 	Class<T> type;
 
-	public SelectWhereQuery(Class<T> cLass, String WhereClause, Object... keys) {
+	public SelectQuery(Class<T> cLass, Object... primaryKey) {
 		this.type = cLass;
-		fieldsDeclare(type, keys);
+		setByTypeAndPrimaryKey(cLass, primaryKey);
 		Table table = type.getAnnotation(Table.class);
 		this.tableName = table.value();
-		sql = "select * from " + tableName + WHERE + WhereClause;
+		sql = "select * from " + tableName + WHERE + joinedString(keys, "=? and ", 5);
 
-		for (int i = 0; i < keys.length; i++) {
-			parameters.add(keys[i]);
+		for (int i = 0; i < primaryKey.length; i++) {
+			parameters.add(primaryKey[i]);
 		}
 	}
+	
 
 	@SuppressWarnings("unchecked")
-	public T execute(Connection conn) {
+	public T execute(Connection conn)  {
 		PreparedStatement pstmt;
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -67,7 +68,6 @@ public class SelectWhereQuery<T> extends EasyQuery {
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-
 		return null;
 	}
 

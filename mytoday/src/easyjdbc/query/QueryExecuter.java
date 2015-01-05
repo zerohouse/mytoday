@@ -9,11 +9,11 @@ import easyjdbc.query.execute.DeleteQuery;
 import easyjdbc.query.execute.DeleteWhereQuery;
 import easyjdbc.query.execute.InsertQuery;
 import easyjdbc.query.execute.UpdateQuery;
-import easyjdbc.query.get.GetRecordQuery;
-import easyjdbc.query.get.GetRecordsQuery;
-import easyjdbc.query.get.ListQuery;
-import easyjdbc.query.get.SelectQuery;
-import easyjdbc.query.get.SelectWhereQuery;
+import easyjdbc.query.raw.GetRecordQuery;
+import easyjdbc.query.raw.GetRecordsQuery;
+import easyjdbc.query.select.ListQuery;
+import easyjdbc.query.select.SelectQuery;
+import easyjdbc.query.select.SelectWhereQuery;
 import easyjdbc.setting.Setting;
 
 public class QueryExecuter {
