@@ -26,6 +26,12 @@ public class User {
 		this.name = name;
 	}
 
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", password=" + password + ", email=" + email + ", name=" + name + ", nickname=" + nickname + ", gender=" + gender
+				+ ", timestamp=" + timestamp + "]";
+	}
+
 	public boolean isPasswordCorrect(User userpassed) {
 		return password.equals(userpassed.getPassword());
 	}

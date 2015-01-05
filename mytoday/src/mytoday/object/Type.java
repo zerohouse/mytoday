@@ -8,6 +8,7 @@ public class Type {
 	
 	@Key
 	private Integer id;
+	@Key
 	private String userId;
 	private String name;
 	private String color;

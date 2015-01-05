@@ -4,6 +4,7 @@ import mytoday.object.DateHeader;
 import mytoday.object.Result;
 import mytoday.object.User;
 import easyjdbc.query.QueryExecuter;
+import easyjdbc.query.excute.InsertQuery;
 import easymapping.annotation.Controller;
 import easymapping.annotation.Post;
 import easymapping.mapping.Http;
@@ -33,7 +34,9 @@ public class DateHeaderController {
 		QueryExecuter qe = new QueryExecuter();
 		DateHeader dateheader = http.getJsonObject(DateHeader.class, "dateheader");
 		dateheader.setUserId(user.getId());
-		qe.insertIfExistUpdate(dateheader);
+		InsertQuery query = new InsertQuery(dateheader);
+		query.ifExistUpdate();
+		qe.execute(query);
 		qe.close();
 		return new Json(new Result(true, null));
 	}

@@ -57,9 +57,10 @@
 				</div>
 				<div class="input-group input-group-lg">
 					<span class="input-group-addon">NickName</span><input type="text"
-						class="form-control" placeholder="UserName" maxlength="30"
+						class="form-control" placeholder="NickName" maxlength="30"
 						ng-model="user.nickname"> 
 				</div>
+
 
 				<div>User ==> ID : {{user.id}} | e-mail : {{user.email}} |
 					name : {{user.name}} | nickname : {{user.nickname}} | gender :

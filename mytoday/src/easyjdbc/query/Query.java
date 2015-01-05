@@ -1,12 +1,13 @@
 package easyjdbc.query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Query {
 	
 	protected int resultSize;
 	protected String sql;
-	protected List<Object> parameters;
+	protected List<Object> parameters = new ArrayList<Object>();
 
 	public void setSql(String sql) {
 		this.sql = sql;
@@ -15,6 +16,14 @@ public abstract class Query {
 	public void addSql(String sql) {
 		this.sql += " ";
 		this.sql += sql;
+	}
+
+	public String getSql() {
+		return sql;
+	}
+
+	public List<Object> getParameters() {
+		return parameters;
 	}
 
 	public void addParameters(Object... parameters) {
@@ -27,4 +36,5 @@ public abstract class Query {
 		this.parameters = parameters;
 	}
 
+	
 }

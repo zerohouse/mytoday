@@ -1,4 +1,4 @@
-package easyjdbc.query;
+package easyjdbc.query.get;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import easyjdbc.query.Query;
 
 public class GetRecordQuery extends Query {
 
