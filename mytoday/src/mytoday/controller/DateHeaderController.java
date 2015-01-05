@@ -4,7 +4,7 @@ import mytoday.object.DateHeader;
 import mytoday.object.Result;
 import mytoday.object.User;
 import easyjdbc.query.QueryExecuter;
-import easyjdbc.query.excute.InsertQuery;
+import easyjdbc.query.execute.InsertQuery;
 import easymapping.annotation.Controller;
 import easymapping.annotation.Post;
 import easymapping.mapping.Http;

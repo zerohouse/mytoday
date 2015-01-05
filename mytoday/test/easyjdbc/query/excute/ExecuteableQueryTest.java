@@ -6,6 +6,10 @@ import mytoday.object.User;
 import org.junit.Before;
 import org.junit.Test;
 
+import easyjdbc.query.execute.DeleteQuery;
+import easyjdbc.query.execute.InsertQuery;
+import easyjdbc.query.execute.UpdateQuery;
+
 public class ExecuteableQueryTest {
 	User user = new User();
 	Type type = new Type();

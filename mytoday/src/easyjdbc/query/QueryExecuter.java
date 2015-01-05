@@ -5,10 +5,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 
-import easyjdbc.query.excute.DeleteQuery;
-import easyjdbc.query.excute.DeleteWhereQuery;
-import easyjdbc.query.excute.InsertQuery;
-import easyjdbc.query.excute.UpdateQuery;
+import easyjdbc.query.execute.DeleteQuery;
+import easyjdbc.query.execute.DeleteWhereQuery;
+import easyjdbc.query.execute.InsertQuery;
+import easyjdbc.query.execute.UpdateQuery;
 import easyjdbc.query.get.GetRecordQuery;
 import easyjdbc.query.get.GetRecordsQuery;
 import easyjdbc.query.get.ListQuery;

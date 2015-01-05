@@ -1,4 +1,4 @@
-package easyjdbc.query.excute;
+package easyjdbc.query.execute;
 
 import easyjdbc.annotation.Table;
 
