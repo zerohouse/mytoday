@@ -22,7 +22,7 @@ public class ListQuery<T> extends EasyQuery {
 
 	public ListQuery(Class<T> cLass, String whereClause, Object... keys) {
 		type = cLass;
-		setByType(cLass);
+		setByType(cLass, DBColumn.PHASE_SELECT);
 		Table table = type.getAnnotation(Table.class);
 		this.pageSize = table.pageSize();
 		this.tableName = table.value();
@@ -33,7 +33,7 @@ public class ListQuery<T> extends EasyQuery {
 
 	public ListQuery(Class<T> cLass) {
 		type = cLass;
-		setByType(cLass);
+		setByType(cLass, DBColumn.PHASE_SELECT);
 		Table table = type.getAnnotation(Table.class);
 		this.pageSize = table.pageSize();
 		this.tableName = table.value();

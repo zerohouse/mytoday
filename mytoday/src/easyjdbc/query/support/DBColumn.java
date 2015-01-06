@@ -6,19 +6,33 @@ import easyjdbc.annotation.Column;
 
 public class DBColumn {
 
+	public static final int PHASE_INSERT = 0;
+	public static final int PHASE_DELETE = 1;
+	public static final int PHASE_UPDATE = 2;
+	public static final int PHASE_SELECT = 3;
+
 	private String columnName;
 	private Field field;
 	private Object object;
+	private int phase;
+	private String[] format;
 
-	public DBColumn(Field field, Object object) {
-		this(field);
+	public DBColumn(Field field, int phase, Object object) {
+		this(field, phase);
 		this.object = object;
 	}
 
-	public DBColumn(Field field) {
+	public DBColumn(Field field, int phase) {
+		this.phase = phase;
 		this.field = field;
 		if (field.isAnnotationPresent(Column.class)) {
-			this.columnName = field.getAnnotation(Column.class).value();
+			Column column = field.getAnnotation(Column.class);
+			this.columnName = column.value();
+			format = new String[4];
+			format[PHASE_INSERT] = column.insertFormat();
+			format[PHASE_DELETE] = column.deleteFormart();
+			format[PHASE_UPDATE] = column.updateFormart();
+			format[PHASE_SELECT] = column.selectFormart();
 			return;
 		}
 		this.columnName = field.getName();

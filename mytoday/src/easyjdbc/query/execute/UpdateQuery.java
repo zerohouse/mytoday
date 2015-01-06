@@ -11,7 +11,7 @@ public class UpdateQuery extends ExecuteableQuery {
 	public UpdateQuery(Object instance) {
 		this.instance = instance;
 		Class<?> type = instance.getClass();
-		setByInstance(instance);
+		setByInstance(instance, DBColumn.PHASE_UPDATE);
 		Table table = type.getAnnotation(Table.class);
 		this.tableName = table.value();
 		sql = "update " + tableName + " set " + getNotNullFieldString(columns, "=?, ", 2) + WHERE + joinedString(keys, "=? and ", 5);

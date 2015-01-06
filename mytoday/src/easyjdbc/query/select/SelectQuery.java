@@ -16,7 +16,7 @@ public class SelectQuery<T> extends EasyQuery {
 
 	public SelectQuery(Class<T> cLass, Object... primaryKey) {
 		this.type = cLass;
-		setByTypeAndPrimaryKey(cLass, primaryKey);
+		setByTypeAndPrimaryKey(cLass, DBColumn.PHASE_SELECT, primaryKey);
 		Table table = type.getAnnotation(Table.class);
 		this.tableName = table.value();
 		sql = "select * from " + tableName + WHERE + joinedString(keys, "=? and ", 5);

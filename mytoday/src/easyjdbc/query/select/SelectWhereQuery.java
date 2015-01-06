@@ -16,7 +16,7 @@ public class SelectWhereQuery<T> extends EasyQuery {
 
 	public SelectWhereQuery(Class<T> cLass, String WhereClause, Object... keys) {
 		this.type = cLass;
-		setByType(type);
+		setByType(type, DBColumn.PHASE_SELECT);
 		Table table = type.getAnnotation(Table.class);
 		this.tableName = table.value();
 		sql = "select * from " + tableName + WHERE + WhereClause;

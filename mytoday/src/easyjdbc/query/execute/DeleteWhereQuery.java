@@ -1,6 +1,7 @@
 package easyjdbc.query.execute;
 
 import easyjdbc.annotation.Table;
+import easyjdbc.query.support.DBColumn;
 
 public class DeleteWhereQuery extends ExecuteableQuery {
 
@@ -9,7 +10,7 @@ public class DeleteWhereQuery extends ExecuteableQuery {
 
 	public DeleteWhereQuery(Class<?> type, String whereClause, Object... keys) {
 		this.type = type;
-		setByType(type);
+		setByType(type, DBColumn.PHASE_DELETE);
 		Table table = type.getAnnotation(Table.class);
 		this.tableName = table.value();
 		sql = "delete from " + tableName + WHERE + whereClause;

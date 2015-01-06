@@ -6,4 +6,13 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Column {
 	String value();
+	
+	String insertFormat() default "";
+	
+	String selectFormart() default "";
+	
+	String updateFormart() default "";
+	
+	String deleteFormart() default "";
+
 }

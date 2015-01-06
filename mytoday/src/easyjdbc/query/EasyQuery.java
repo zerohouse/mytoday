@@ -39,14 +39,6 @@ public abstract class EasyQuery extends Query {
 		return result;
 	}
 
-	protected String getQuestionComma(int commaLength) {
-		String result = new String();
-		for (int i = 0; i < commaLength; i++) {
-			result += "?, ";
-		}
-		result = result.substring(0, result.length() - 2);
-		return result;
-	}
 
 	protected String joinedString(Map<String, DBColumn> columns, String delimiter) {
 		String result = new String();
@@ -55,12 +47,12 @@ public abstract class EasyQuery extends Query {
 		return result;
 	}
 
-	protected void setByInstance(Object instance) {
+	protected void setByInstance(Object instance, int phase) {
 		Field[] fields = instance.getClass().getDeclaredFields();
 		for (int i = 0; i < fields.length; i++) {
 			if (fields[i].isAnnotationPresent(Exclude.class))
 				continue;
-			DBColumn dbCol = new DBColumn(fields[i]);
+			DBColumn dbCol = new DBColumn(fields[i], phase);
 			dbCol.setByInstance(instance);
 			if (fields[i].isAnnotationPresent(Key.class)) {
 				keys.put(fields[i].getName(), dbCol);
@@ -70,31 +62,31 @@ public abstract class EasyQuery extends Query {
 		}
 	}
 
-	protected void setByType(Class<?> cLass) {
+	protected void setByType(Class<?> cLass, int phase) {
 		Field[] fields = cLass.getDeclaredFields();
 		for (int i = 0; i < fields.length; i++) {
 			if (fields[i].isAnnotationPresent(Exclude.class))
 				continue;
 			if (fields[i].isAnnotationPresent(Key.class)) {
-				keys.put(fields[i].getName(), new DBColumn(fields[i]));
+				keys.put(fields[i].getName(), new DBColumn(fields[i], phase));
 				continue;
 			}
-			columns.put(fields[i].getName(), new DBColumn(fields[i]));
+			columns.put(fields[i].getName(), new DBColumn(fields[i], phase));
 		}
 	}
 
-	protected void setByTypeAndPrimaryKey(Class<?> cLass, Object... primaryKey) {
+	protected void setByTypeAndPrimaryKey(Class<?> cLass, int phase, Object... primaryKey) {
 		Field[] fields = cLass.getDeclaredFields();
 		int j = 0;
 		for (int i = 0; i < fields.length; i++) {
 			if (fields[i].isAnnotationPresent(Exclude.class))
 				continue;
 			if (fields[i].isAnnotationPresent(Key.class)) {
-				keys.put(fields[i].getName(), new DBColumn(fields[i], primaryKey[j]));
+				keys.put(fields[i].getName(), new DBColumn(fields[i], phase, primaryKey[j]));
 				j++;
 				continue;
 			}
-			columns.put(fields[i].getName(), new DBColumn(fields[i]));
+			columns.put(fields[i].getName(), new DBColumn(fields[i], phase));
 		}
 	}
 

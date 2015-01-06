@@ -10,7 +10,7 @@ public class DeleteQuery extends ExecuteableQuery {
 
 	public DeleteQuery(Class<?> type, Object... primaryKey) {
 		this.type = type;
-		setByTypeAndPrimaryKey(type, primaryKey);
+		setByTypeAndPrimaryKey(type, DBColumn.PHASE_DELETE, primaryKey);
 		Table table = type.getAnnotation(Table.class);
 		this.tableName = table.value();
 		sql = "delete from " + tableName + WHERE + joinedString(keys, "=? and ", 5);
@@ -19,7 +19,7 @@ public class DeleteQuery extends ExecuteableQuery {
 	}
 
 	public DeleteQuery(Object instance) {
-		setByInstance(instance);
+		setByInstance(instance, DBColumn.PHASE_DELETE);
 		Table table = instance.getClass().getAnnotation(Table.class);
 		this.tableName = table.value();
 		sql = "delete from " + tableName + WHERE + joinedString(keys, "=? and ", 5);
