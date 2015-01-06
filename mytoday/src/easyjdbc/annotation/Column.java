@@ -7,12 +7,5 @@ import java.lang.annotation.RetentionPolicy;
 public @interface Column {
 	String value();
 	
-	String insertFormat() default "";
-	
-	String selectFormart() default "";
-	
-	String updateFormart() default "";
-	
-	String deleteFormart() default "";
-
+	String valueFormat() default "?";
 }

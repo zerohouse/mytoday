@@ -2,6 +2,8 @@ package easyjdbc.query.excute;
 
 import java.sql.Connection;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import mytoday.object.Type;
 import mytoday.object.User;
@@ -24,17 +26,28 @@ public class ExecuteableQueryTest {
 
 	@Before
 	public void setup() {
-		user.setId("zerohoduse");
-		user.setPassword("pasword");
+		user.setId("sdfds");
+		user.setPassword("zzzdd");
 		user.setEmail("mail");
 		user.setTimestamp(new Date());
 	}
 
+	
+	@Test
+	public void selectTsest() {
+		Pattern pattern = Pattern.compile("[?]");
+		Matcher matcher = pattern.matcher("asfs???daf?ASDFasdf?sadfasdf?asdf");
+		int count = 0;
+		while (matcher.find())
+			count++;
+		System.out.println(count);
+	}
+	
 
 	@Test
 	public void selectTest() {
 		Connection con = QueryExecuter.getConnection();
-		SelectQuery<User> query = new SelectQuery<User>(User.class, "mytoday");
+		SelectQuery<User> query = new SelectQuery<User>(User.class, "sdfds");
 		System.out.println(query.execute(con));
 	}
 	
@@ -70,7 +83,7 @@ public class ExecuteableQueryTest {
 	@Test
 	public void selectwhereTest() {
 		Connection con = QueryExecuter.getConnection();
-		SelectWhereQuery<Type> query = new SelectWhereQuery<Type>(Type.class, "userId=?", "mytoday");
+		SelectWhereQuery<Type> query = new SelectWhereQuery<Type>(Type.class, "userId=?", "sdfds");
 		System.out.println(query.execute(con));
 	}
 	

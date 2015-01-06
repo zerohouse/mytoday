@@ -1,8 +1,8 @@
 package easyjdbc.query;
 
 import java.lang.reflect.Field;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import easyjdbc.annotation.Exclude;
 import easyjdbc.annotation.Key;
@@ -11,39 +11,35 @@ import easyjdbc.query.support.DBColumn;
 public abstract class EasyQuery extends Query {
 
 	protected final static String WHERE = " where ";
+	protected static final String AND = " and ";
+	protected static final String COMMA = " , ";
 
-	protected Map<String, DBColumn> columns = new LinkedHashMap<String, DBColumn>();
-	protected Map<String, DBColumn> keys = new LinkedHashMap<String, DBColumn>();
+	protected List<DBColumn> columns = new ArrayList<DBColumn>();
+	protected List<DBColumn> keys = new ArrayList<DBColumn>();
 
 	public EasyQuery() {
 
 	}
 
-	protected String joinedString(Map<String, DBColumn> columns, String delimiter, int subLength) {
+	protected String joinedString(List<DBColumn> columns, String delimiter, boolean isEnd) {
 		String result = new String();
-		for (String key : columns.keySet()) {
-			result += columns.get(key).getColumnName() + delimiter;
+		for (int i = 0; i < columns.size(); i++) {
+			result += columns.get(i).getNameAndValue() + delimiter;
 		}
-		result = result.substring(0, result.length() - subLength);
+		if (isEnd)
+			result = result.substring(0, result.length() - delimiter.length());
 		return result;
 	}
 
-	protected String getNotNullFieldString(Map<String, DBColumn> columns, String delimiter, int subLength) {
+	protected String getNotNullFieldString(List<DBColumn> columns, String delimiter, boolean isEnd) {
 		String result = new String();
-		for (String key : columns.keySet()) {
-			DBColumn column = columns.get(key);
+		for (int i = 0; i < columns.size(); i++) {
+			DBColumn column = columns.get(i);
 			if (column.hasObject())
-				result += column.getColumnName() + delimiter;
+				result += column.getNameAndValue() + delimiter;
 		}
-		result = result.substring(0, result.length() - subLength);
-		return result;
-	}
-
-
-	protected String joinedString(Map<String, DBColumn> columns, String delimiter) {
-		String result = new String();
-		for (String key : columns.keySet())
-			result += columns.get(key).getColumnName() + delimiter;
+		if (isEnd)
+			result = result.substring(0, result.length() - delimiter.length());
 		return result;
 	}
 
@@ -55,10 +51,10 @@ public abstract class EasyQuery extends Query {
 			DBColumn dbCol = new DBColumn(fields[i], phase);
 			dbCol.setByInstance(instance);
 			if (fields[i].isAnnotationPresent(Key.class)) {
-				keys.put(fields[i].getName(), dbCol);
+				keys.add(dbCol);
 				continue;
 			}
-			columns.put(fields[i].getName(), dbCol);
+			columns.add(dbCol);
 		}
 	}
 
@@ -68,10 +64,10 @@ public abstract class EasyQuery extends Query {
 			if (fields[i].isAnnotationPresent(Exclude.class))
 				continue;
 			if (fields[i].isAnnotationPresent(Key.class)) {
-				keys.put(fields[i].getName(), new DBColumn(fields[i], phase));
+				keys.add(new DBColumn(fields[i], phase));
 				continue;
 			}
-			columns.put(fields[i].getName(), new DBColumn(fields[i], phase));
+			columns.add(new DBColumn(fields[i], phase));
 		}
 	}
 
@@ -82,11 +78,11 @@ public abstract class EasyQuery extends Query {
 			if (fields[i].isAnnotationPresent(Exclude.class))
 				continue;
 			if (fields[i].isAnnotationPresent(Key.class)) {
-				keys.put(fields[i].getName(), new DBColumn(fields[i], phase, primaryKey[j]));
+				keys.add(new DBColumn(fields[i], phase, primaryKey[j]));
 				j++;
 				continue;
 			}
-			columns.put(fields[i].getName(), new DBColumn(fields[i], phase));
+			columns.add(new DBColumn(fields[i], phase));
 		}
 	}
 

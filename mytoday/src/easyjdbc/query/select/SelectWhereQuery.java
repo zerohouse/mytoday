@@ -40,12 +40,12 @@ public class SelectWhereQuery<T> extends EasyQuery {
 			try {
 				if (rs.next()) {
 					instance = type.getConstructor().newInstance();
-					for (String key : columns.keySet()) {
-						DBColumn column = columns.get(key);
+					for (int i = 0; i < columns.size(); i++) {
+						DBColumn column = columns.get(i);
 						column.setObjectField(instance, rs.getObject(column.getColumnName()));
 					}
-					for (String key : keys.keySet()) {
-						DBColumn column = keys.get(key);
+					for (int i = 0; i < keys.size(); i++) {
+						DBColumn column = keys.get(i);
 						column.setObjectField(instance, rs.getObject(column.getColumnName()));
 					}
 				}

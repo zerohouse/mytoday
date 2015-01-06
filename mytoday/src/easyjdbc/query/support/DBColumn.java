@@ -1,6 +1,9 @@
 package easyjdbc.query.support;
 
 import java.lang.reflect.Field;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import easyjdbc.annotation.Column;
 
@@ -12,10 +15,11 @@ public class DBColumn {
 	public static final int PHASE_SELECT = 3;
 
 	private String columnName;
+	private String format;
 	private Field field;
 	private Object object;
 	private int phase;
-	private String[] format;
+	private int expectedSize = 1;
 
 	public DBColumn(Field field, int phase, Object object) {
 		this(field, phase);
@@ -25,17 +29,30 @@ public class DBColumn {
 	public DBColumn(Field field, int phase) {
 		this.phase = phase;
 		this.field = field;
-		if (field.isAnnotationPresent(Column.class)) {
-			Column column = field.getAnnotation(Column.class);
-			this.columnName = column.value();
-			format = new String[4];
-			format[PHASE_INSERT] = column.insertFormat();
-			format[PHASE_DELETE] = column.deleteFormart();
-			format[PHASE_UPDATE] = column.updateFormart();
-			format[PHASE_SELECT] = column.selectFormart();
+		columnSetting();
+	}
+
+	private void columnSetting() {
+		this.columnName = field.getName();
+		if (!field.isAnnotationPresent(Column.class)) {
 			return;
 		}
-		this.columnName = field.getName();
+		Column column = field.getAnnotation(Column.class);
+		if (!column.value().equals(""))
+			this.columnName = column.value();
+		format = column.valueFormat();
+		if (format.equals("?"))
+			return;
+		Pattern pattern = Pattern.compile("[?]");
+		Matcher matcher = pattern.matcher(format);
+		int count = 0;
+		while (matcher.find())
+			count++;
+		expectedSize = count;
+	}
+
+	public int getPhase() {
+		return phase;
 	}
 
 	public Object getObject() {
@@ -54,7 +71,7 @@ public class DBColumn {
 		}
 	}
 
-	public Object getInvokedObject(Object instance) {
+	private Object getInvokedObject(Object instance) {
 		try {
 			return instance.getClass().getMethod(getterString(field.getName()), (Class<?>[]) null).invoke(instance);
 		} catch (Exception e) {
@@ -78,6 +95,19 @@ public class DBColumn {
 		if (object == null)
 			return false;
 		return true;
+	}
+
+	public String getNameAndValue() {
+		if (format == null)
+			return columnName + "=?";
+		if (format.equals(""))
+			return columnName + "=?";
+		return columnName + "=" + format;
+	}
+
+	public void addObject(List<Object> parameters) {
+		for (int i = 0; i < expectedSize; i++)
+			parameters.add(object);
 	}
 
 }
