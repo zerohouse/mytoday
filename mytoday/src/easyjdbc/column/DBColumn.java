@@ -1,4 +1,4 @@
-package easyjdbc.query.support;
+package easyjdbc.column;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -9,25 +9,23 @@ import easyjdbc.annotation.Column;
 
 public class DBColumn {
 
-	public static final int PHASE_INSERT = 0;
-	public static final int PHASE_DELETE = 1;
-	public static final int PHASE_UPDATE = 2;
-	public static final int PHASE_SELECT = 3;
-
+	private boolean otherTable = false;
 	private String columnName;
 	private String format;
 	private Field field;
-	private Object object;
-	private int phase;
-	private int expectedSize = 1;
-
-	public DBColumn(Field field, int phase, Object object) {
-		this(field, phase);
-		this.object = object;
+	
+	public boolean isOtherTable() {
+		return otherTable;
 	}
 
-	public DBColumn(Field field, int phase) {
-		this.phase = phase;
+	public void setOtherTable(boolean otherTable) {
+		this.otherTable = otherTable;
+	}
+
+	private Object object;
+	private int expectedSize = 1;
+
+	public DBColumn(Field field) {
 		this.field = field;
 		columnSetting();
 	}
@@ -51,8 +49,8 @@ public class DBColumn {
 		expectedSize = count;
 	}
 
-	public int getPhase() {
-		return phase;
+	public void setColumnName(String columnName) {
+		this.columnName = columnName;
 	}
 
 	public Object getObject() {
@@ -63,11 +61,11 @@ public class DBColumn {
 		return columnName;
 	}
 
-	public Object setObjectField(Object instance, Object parameter) {
+	public void setObjectField(Object instance, Object parameter) {
 		try {
-			return instance.getClass().getMethod(setterString(field.getName()), field.getType()).invoke(instance, parameter);
+			instance.getClass().getMethod(setterString(field.getName()), field.getType()).invoke(instance, parameter);
 		} catch (Exception e) {
-			return null;
+			e.printStackTrace();
 		}
 	}
 
@@ -108,6 +106,10 @@ public class DBColumn {
 	public void addObject(List<Object> parameters) {
 		for (int i = 0; i < expectedSize; i++)
 			parameters.add(object);
+	}
+
+	public void setObject(Object object) {
+		this.object = object;
 	}
 
 }

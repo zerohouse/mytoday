@@ -1,31 +1,21 @@
 package easyjdbc.query.execute;
 
-import easyjdbc.annotation.Table;
-import easyjdbc.query.support.DBColumn;
+import easyjdbc.column.list.ColumnList;
+import easyjdbc.column.list.DeleteList;
+import easyjdbc.column.list.ObjectList;
 
 public class DeleteQuery extends ExecuteableQuery {
 
-	private String tableName;
-	Class<?> type;
-
 	public DeleteQuery(Class<?> type, Object... primaryKey) {
-		this.type = type;
-		setByTypeAndPrimaryKey(type, DBColumn.PHASE_DELETE, primaryKey);
-		Table table = type.getAnnotation(Table.class);
-		this.tableName = table.value();
-		sql = "delete from " + tableName + WHERE + joinedString(keys, AND, true);
+		list = new DeleteList(type, primaryKey);
+		sql = "delete from " + list.getTableName() + WHERE + list.getNameAndValue(ColumnList.KEY, AND, true);
 		for (int i = 0; i < primaryKey.length; i++)
 			parameters.add(primaryKey[i]);
 	}
 
 	public DeleteQuery(Object instance) {
-		setByInstance(instance, DBColumn.PHASE_DELETE);
-		Table table = instance.getClass().getAnnotation(Table.class);
-		this.tableName = table.value();
-		sql = "delete from " + tableName + WHERE + joinedString(keys, AND, true);
-		for (int i = 0; i < keys.size(); i++) {
-			DBColumn column = keys.get(i);
-			column.addObject(parameters);
-		}
+		list = new ObjectList(instance);
+		sql = "delete from " + list.getTableName() + WHERE + list.getNameAndValue(ColumnList.KEY, AND, true);
+		list.addParameters(ColumnList.KEY, parameters);
 	}
 }

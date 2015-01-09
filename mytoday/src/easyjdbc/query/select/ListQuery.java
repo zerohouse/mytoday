@@ -8,35 +8,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import easyjdbc.annotation.Table;
+import easyjdbc.column.list.ColumnList;
+import easyjdbc.column.list.SelectList;
 import easyjdbc.query.EasyQuery;
-import easyjdbc.query.support.DBColumn;
 
 public class ListQuery<T> extends EasyQuery {
 
-	private Class<T> type;
-	private String tableName;
 	private List<String> whereClauses = new ArrayList<String>();
 	private String order = "";
 	private String limit = "";
 	private int pageSize;
 
 	public ListQuery(Class<T> cLass, String whereClause, Object... keys) {
-		type = cLass;
-		setByType(cLass, DBColumn.PHASE_SELECT);
-		Table table = type.getAnnotation(Table.class);
+		list = new SelectList(cLass);
+		Table table = cLass.getAnnotation(Table.class);
 		this.pageSize = table.pageSize();
-		this.tableName = table.value();
 		whereClauses.add(whereClause);
 		for (int i = 0; i < keys.length; i++)
 			parameters.add(keys[i]);
 	}
 
 	public ListQuery(Class<T> cLass) {
-		type = cLass;
-		setByType(cLass, DBColumn.PHASE_SELECT);
-		Table table = type.getAnnotation(Table.class);
-		this.pageSize = table.pageSize();
-		this.tableName = table.value();
+		list = new SelectList(cLass);
+		Table table = cLass.getAnnotation(Table.class);
 		if (!table.defaultCondition().equals(""))
 			whereClauses.add(table.defaultCondition());
 	}
@@ -57,18 +51,11 @@ public class ListQuery<T> extends EasyQuery {
 			Object instance = null;
 			try {
 				while (rs.next()) {
-					instance = type.getConstructor().newInstance();
-					for (int i = 0; i < keys.size(); i++) {
-						DBColumn column = keys.get(i);
-						column.setObjectField(instance, rs.getObject(column.getColumnName()));
-					}
-					for (int i = 0; i < columns.size(); i++) {
-						DBColumn column = columns.get(i);
-						column.setObjectField(instance, rs.getObject(column.getColumnName()));
-					}
+					instance = list.objFromResultSet(rs);
 					result.add((T) instance);
 				}
 			} catch (Exception e) {
+				System.out.println(sql);
 				e.printStackTrace();
 			} finally {
 				if (pstmt != null)
@@ -90,7 +77,7 @@ public class ListQuery<T> extends EasyQuery {
 	}
 
 	private void setSql() {
-		sql = "select * from " + tableName;
+		sql = "select " + list.getJoinedName(ColumnList.ALL, ",", true) + " from " + list.getTableName();
 		if (whereClauses.size() != 0)
 			setWhere();
 		sql += order;
@@ -105,7 +92,7 @@ public class ListQuery<T> extends EasyQuery {
 	}
 
 	public void setOrder(String columnName, boolean asc) {
-		order = "order by " + columnName + " ";
+		order = " order by " + columnName + " ";
 		if (!asc)
 			order += "desc ";
 	}

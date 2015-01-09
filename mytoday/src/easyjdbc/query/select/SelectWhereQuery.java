@@ -5,21 +5,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import easyjdbc.annotation.Table;
+import easyjdbc.column.list.ColumnList;
+import easyjdbc.column.list.SelectList;
 import easyjdbc.query.EasyQuery;
-import easyjdbc.query.support.DBColumn;
 
 public class SelectWhereQuery<T> extends EasyQuery {
 
-	String tableName;
-	Class<T> type;
-
 	public SelectWhereQuery(Class<T> cLass, String WhereClause, Object... keys) {
-		this.type = cLass;
-		setByType(type, DBColumn.PHASE_SELECT);
-		Table table = type.getAnnotation(Table.class);
-		this.tableName = table.value();
-		sql = "select * from " + tableName + WHERE + WhereClause;
+		list = new SelectList(cLass);
+		sql = "select " + list.getJoinedName(ColumnList.ALL, ",", true) + " from " + list.getTableName() + WHERE + WhereClause;
 
 		for (int i = 0; i < keys.length; i++) {
 			parameters.add(keys[i]);
@@ -39,17 +33,10 @@ public class SelectWhereQuery<T> extends EasyQuery {
 			Object instance = null;
 			try {
 				if (rs.next()) {
-					instance = type.getConstructor().newInstance();
-					for (int i = 0; i < columns.size(); i++) {
-						DBColumn column = columns.get(i);
-						column.setObjectField(instance, rs.getObject(column.getColumnName()));
-					}
-					for (int i = 0; i < keys.size(); i++) {
-						DBColumn column = keys.get(i);
-						column.setObjectField(instance, rs.getObject(column.getColumnName()));
-					}
+					instance = list.objFromResultSet(rs);
 				}
 			} catch (Exception e) {
+				System.out.println(sql);
 				e.printStackTrace();
 			} finally {
 				if (pstmt != null)

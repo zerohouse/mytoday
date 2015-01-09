@@ -12,4 +12,10 @@ public @interface Table {
 
 	int pageSize() default 10;
 
+	String joinWith() default "";
+	
+	String joinType() default "inner";
+	
+	String on() default "";
+	
 }
